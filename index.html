@@ -50,7 +50,7 @@
 <body>
 
 <div class="container">
-    <h2>🥤 飲料開發筆記</h2>
+    <h2>🥤 飲料筆記</h2>
     
     <div class="form-group"><label>飲料店</label><input type="text" id="shopName" placeholder="例如：五十嵐、麻古"></div>
     <div class="form-group"><label>地點</label><input type="text" id="location" placeholder="例如：三重自強店"></div>
@@ -108,7 +108,7 @@
 
 <script>
     // --- 重要：貼上你的 Google Apps Script URL ---
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWzUhwBnoYacz-Ncj0npr1ZpKPc7eXqiL6DLJcGsl93URkQkBnL5uSirAGydxcHPVMYw/exec"; 
+    const WEB_APP_URL = "在此貼上你的GAS網址"; 
     let currentEditId = null;
 
     window.onload = displayRecords;
@@ -192,20 +192,33 @@
         btn.innerText = "正在從 Google Sheets 載入... ⏳";
 
         try {
-            const response = await fetch(WEB_APP_URL);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const cloudRecords = await response.json();
+            // 增加快取控制與重新導向設定，確保拉到最新資料
+            const response = await fetch(WEB_APP_URL, {
+                method: 'GET',
+                redirect: 'follow', 
+                cache: 'no-cache' // 強制不使用快取
+            });
+            
+            const textData = await response.text(); // 先轉純文字，方便報錯時查看
+            
+            let cloudRecords;
+            try {
+                cloudRecords = JSON.parse(textData);
+            } catch (parseError) {
+                console.error("回傳內容無法解析：", textData);
+                throw new Error("回傳格式錯誤！請確認 GAS 已重新部署為「新版本」。");
+            }
 
-            if (cloudRecords && cloudRecords.length > 0) {
+            if (cloudRecords && Array.isArray(cloudRecords) && cloudRecords.length > 0) {
                 localStorage.setItem('myDrinkLogs', JSON.stringify(cloudRecords));
                 displayRecords();
                 alert(`✅ 同步成功！共載入了 ${cloudRecords.length} 筆最新紀錄。`);
             } else {
-                alert('雲端目前沒有任何紀錄。');
+                alert('雲端目前沒有任何紀錄，或是讀取到空陣列。');
             }
         } catch (error) {
             console.error("載入失敗", error);
-            alert("載入失敗 ❌\n請確認您的 Apps Script 是否已新增 doGet 函數，且部署權限設為「所有人」。");
+            alert("載入失敗 ❌\n錯誤訊息：" + error.message + "\n\n常見原因：\n1. 您可能忘記將 GAS 重新部署為「新版本」\n2. 部署權限未設為「所有人」");
         } finally {
             btn.disabled = false;
             btn.innerText = "📥 從雲端載入最新紀錄";
@@ -300,7 +313,7 @@
             displayRecords();
 
             // 呼叫雲端進行刪除
-            if(recordToDelete && WEB_APP_URL !== "在此貼上你的GAS網址") {
+            if(recordToDelete && WEB_APP_URL !== "https://script.google.com/macros/s/AKfycbwWzUhwBnoYacz-Ncj0npr1ZpKPc7eXqiL6DLJcGsl93URkQkBnL5uSirAGydxcHPVMYw/exec") {
                 try {
                     const payload = {
                         action: 'delete',
