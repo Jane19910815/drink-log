@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>飲料紀錄反查系統 v2.3</title>
+    <title>飲料紀錄反查系統 v2.4 (雲端同步版)</title>
     <style>
         :root { 
             --primary-color: #27ae60; /* 綠色 - 好喝 */
             --danger-color: #e74c3c;  /* 紅色 - 踩雷 */
             --neutral-color: #95a5a6; /* 灰色 - 還好 */
             --accent-color: #f1c40f; 
+            --cloud-color: #3498db;   /* 藍色 - 雲端載入 */
         }
         body { font-family: -apple-system, system-ui, sans-serif; background-color: #f4f6f8; padding: 15px; margin: 0; }
         .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
@@ -19,9 +20,13 @@
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
         input:focus, select:focus, textarea:focus { border-color: var(--primary-color); outline: none; }
         .row { display: flex; gap: 10px; }
-        button { width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; margin-top: 10px; box-shadow: 0 4px 6px rgba(39,174,96,0.2); cursor: pointer; }
+        button { width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: background 0.2s; }
         button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
         
+        .btn-cloud { background: var(--cloud-color); margin-top: 10px; font-size: 16px; }
+        .btn-cloud:hover { background: #2980b9; }
+
         /* 搜尋反查區 */
         .search-section { margin-top: 30px; border-top: 2px dashed #eee; padding-top: 20px; }
         .search-box { background-color: #fff9e6; border: 2px solid var(--accent-color); font-weight: bold; }
@@ -40,7 +45,7 @@
         .item-note { font-size: 13px; color: #777; background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 8px; border-left: 2px solid #ddd; }
         .action-buttons { position: absolute; right: 12px; top: 12px; display: flex; gap: 15px; }
         .action-btn { cursor: pointer; font-size: 13px; font-weight: bold; }
-        .action-btn.edit { color: #3498db; }
+        .action-btn.edit { color: var(--cloud-color); }
         .action-btn.delete { color: #ccc; }
         .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #eee; margin-right: 5px; }
     </style>
@@ -93,6 +98,9 @@
         <button id="saveBtn" onclick="saveRecord()" style="flex: 2;">儲存紀錄並上傳雲端</button>
         <button id="cancelBtn" onclick="cancelEdit()" style="flex: 1; display: none; background-color: #95a5a6;">取消</button>
     </div>
+    
+    <!-- 新增：從雲端載入按鈕 -->
+    <button id="loadBtn" class="btn-cloud" onclick="loadFromCloud()">📥 從雲端載入最新紀錄</button>
 
     <!-- 反查區 -->
     <div class="search-section">
@@ -120,7 +128,7 @@
             ice: document.getElementById('ice').value,
             rating: document.getElementById('rating').value,
             note: document.getElementById('note').value,
-            date: new Date().toLocaleDateString()
+            date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString('zh-TW', {hour12: false}).slice(0, 5)
         };
 
         if(!record.shop || !record.drink) return alert('店名與品項是必填的喔！');
@@ -134,7 +142,7 @@
                 record.date = records[index].date + " (已編輯)"; 
                 records[index] = record;
                 localStorage.setItem('myDrinkLogs', JSON.stringify(records));
-                alert('本地紀錄已更新！\n\n(工程師溫馨提示：此修改僅更新您手機的介面，Google Sheets 雲端資料庫需手動調整)');
+                alert('本地紀錄已更新！\n\n(溫馨提示：此修改僅更新您手機的介面，Google Sheets 雲端資料庫需手動調整)');
             }
             cancelEdit();
             displayRecords();
@@ -144,7 +152,7 @@
         btn.disabled = true;
         btn.innerText = "連線雲端中...";
 
-        // 雲端同步
+        // 雲端同步 (POST)
         if(WEB_APP_URL !== "在此貼上你的GAS網址") {
             try {
                 await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(record) });
@@ -162,12 +170,48 @@
         // 重置 UI
         document.getElementById('drinkName').value = '';
         document.getElementById('note').value = '';
-        // 評價預設跳回好喝，或者你可以註解掉下面這行讓它保留上次選項
         document.getElementById('rating').value = '👍 好喝'; 
         
         displayRecords();
         btn.disabled = false;
         btn.innerText = "儲存紀錄並上傳雲端";
+    }
+
+    // --- 新增：從雲端載入最新紀錄 ---
+    async function loadFromCloud() {
+        if(WEB_APP_URL === "在此貼上你的GAS網址") {
+            return alert("請先在程式碼內設定 GAS 網址！");
+        }
+
+        const btn = document.getElementById('loadBtn');
+        btn.disabled = true;
+        btn.innerText = "正在從 Google Sheets 載入... ⏳";
+
+        try {
+            // 發送 GET 請求去抓取 GAS 吐出來的 JSON
+            const response = await fetch(WEB_APP_URL);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const cloudRecords = await response.json();
+
+            if (cloudRecords && cloudRecords.length > 0) {
+                // 將雲端資料覆蓋本地記錄
+                localStorage.setItem('myDrinkLogs', JSON.stringify(cloudRecords));
+                displayRecords();
+                alert(`✅ 同步成功！共載入了 ${cloudRecords.length} 筆最新紀錄。`);
+            } else {
+                alert('雲端目前沒有任何紀錄。');
+            }
+        } catch (error) {
+            console.error("載入失敗", error);
+            alert("載入失敗 ❌\n請確認您的 Apps Script 是否已新增 doGet 函數，且部署權限設為「所有人」。");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "📥 從雲端載入最新紀錄";
+        }
     }
 
     function editRecord(id) {
@@ -189,6 +233,7 @@
         document.getElementById('saveBtn').innerText = "💾 更新本地紀錄";
         document.getElementById('saveBtn').style.backgroundColor = "#3498db";
         document.getElementById('cancelBtn').style.display = "block";
+        document.getElementById('loadBtn').style.display = "none"; // 編輯時隱藏載入按鈕
         
         // 自動捲動到最上方方便修改
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -204,6 +249,7 @@
         document.getElementById('saveBtn').innerText = "儲存紀錄並上傳雲端";
         document.getElementById('saveBtn').style.backgroundColor = "var(--primary-color)";
         document.getElementById('cancelBtn').style.display = "none";
+        document.getElementById('loadBtn').style.display = "block";
     }
 
     function displayRecords() {
@@ -255,7 +301,7 @@
     }
 
     function deleteRecord(id) {
-        if(confirm('確定要從手機清除這筆顯示嗎？(不會影響 Google Sheet)')) {
+        if(confirm('確定要從手機清除這筆顯示嗎？(不會影響 Google Sheet 雲端資料)')) {
             let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
             records = records.filter(r => r.id !== id);
             localStorage.setItem('myDrinkLogs', JSON.stringify(records));
