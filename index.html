@@ -3,18 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>飲料紀錄反查系統 v2.1</title>
+    <title>飲料紀錄反查系統 v2.3</title>
     <style>
-        :root { --primary-color: #27ae60; --danger-color: #e74c3c; --accent-color: #f1c40f; }
+        :root { 
+            --primary-color: #27ae60; /* 綠色 - 好喝 */
+            --danger-color: #e74c3c;  /* 紅色 - 踩雷 */
+            --neutral-color: #95a5a6; /* 灰色 - 還好 */
+            --accent-color: #f1c40f; 
+        }
         body { font-family: -apple-system, system-ui, sans-serif; background-color: #f4f6f8; padding: 15px; margin: 0; }
         .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
         h2 { text-align: center; color: #333; margin-top: 0; }
         .form-group { margin-bottom: 12px; }
         label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 14px; color: #666; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
-        input:focus { border-color: var(--primary-color); outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary-color); outline: none; }
         .row { display: flex; gap: 10px; }
-        button { width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; margin-top: 10px; box-shadow: 0 4px 6px rgba(39,174,96,0.2); }
+        button { width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; margin-top: 10px; box-shadow: 0 4px 6px rgba(39,174,96,0.2); cursor: pointer; }
+        button:active { transform: scale(0.98); }
         
         /* 搜尋反查區 */
         .search-section { margin-top: 30px; border-top: 2px dashed #eee; padding-top: 20px; }
@@ -23,12 +29,19 @@
         /* 紀錄卡片 */
         .record-list { margin-top: 15px; }
         .record-item { background: #fff; border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #eee; position: relative; }
+        
+        /* 根據評價改變邊框顏色 */
         .record-item.good { border-left: 8px solid var(--primary-color); }
+        .record-item.neutral { border-left: 8px solid var(--neutral-color); }
         .record-item.bad { border-left: 8px solid var(--danger-color); }
+        
         .item-title { font-weight: bold; font-size: 18px; color: #111; }
         .item-info { font-size: 14px; color: #555; margin-top: 3px; }
         .item-note { font-size: 13px; color: #777; background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 8px; border-left: 2px solid #ddd; }
-        .delete-btn { position: absolute; right: 12px; top: 12px; color: #ccc; cursor: pointer; font-size: 12px; }
+        .action-buttons { position: absolute; right: 12px; top: 12px; display: flex; gap: 15px; }
+        .action-btn { cursor: pointer; font-size: 13px; font-weight: bold; }
+        .action-btn.edit { color: #3498db; }
+        .action-btn.delete { color: #ccc; }
         .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #eee; margin-right: 5px; }
     </style>
 </head>
@@ -37,7 +50,7 @@
 <div class="container">
     <h2>🥤 飲料開發筆記</h2>
     
-    <div class="form-group"><label>飲料店</label><input type="text" id="shopName" placeholder="例如：麻古、可不可"></div>
+    <div class="form-group"><label>飲料店</label><input type="text" id="shopName" placeholder="例如：五十嵐、麻古"></div>
     <div class="form-group"><label>地點</label><input type="text" id="location" placeholder="例如：三重自強店"></div>
     <div class="form-group"><label>品項</label><input type="text" id="drinkName" placeholder="例如：金萱雙Q"></div>
     
@@ -56,7 +69,7 @@
         <div class="form-group" style="flex:1">
             <label>冰塊</label>
             <select id="ice">
-                <option value="微冰">微冰</option>
+                <option value="微冰" selected>微冰</option>
                 <option value="少冰">少冰</option>
                 <option value="去冰">去冰</option>
                 <option value="正常">正常</option>
@@ -69,26 +82,31 @@
         <label>評價</label>
         <select id="rating">
             <option value="👍 好喝">👍 好喝，下次再點</option>
+            <option value="👌 還好">👌 還好，中規中矩</option>
             <option value="👎 踩雷">👎 難喝，千萬別點</option>
         </select>
     </div>
 
-    <div class="form-group"><label>備註心得</label><textarea id="note" rows="2" placeholder="好喝在哪？珍珠 Q 嗎？"></textarea></div>
+    <div class="form-group"><label>備註心得</label><textarea id="note" rows="2" placeholder="口感分享、珍珠Q度..."></textarea></div>
 
-    <button id="saveBtn" onclick="saveRecord()">儲存紀錄並上傳雲端</button>
+    <div style="display: flex; gap: 10px;">
+        <button id="saveBtn" onclick="saveRecord()" style="flex: 2;">儲存紀錄並上傳雲端</button>
+        <button id="cancelBtn" onclick="cancelEdit()" style="flex: 1; display: none; background-color: #95a5a6;">取消</button>
+    </div>
 
+    <!-- 反查區 -->
     <div class="search-section">
         <label>🔍 快速反查歷史 (輸入關鍵字)</label>
-        <input type="text" id="searchInput" class="search-box" placeholder="搜尋店名、品項或備註..." onkeyup="displayRecords()">
+        <input type="text" id="searchInput" class="search-box" placeholder="搜尋店名、品項..." onkeyup="displayRecords()">
         
-        <div id="recordList" class="record-list">
-            </div>
+        <div id="recordList" class="record-list"></div>
     </div>
 </div>
 
 <script>
-    // --- 貼上你的 Google Apps Script URL ---
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWzUhwBnoYacz-Ncj0npr1ZpKPc7eXqiL6DLJcGsl93URkQkBnL5uSirAGydxcHPVMYw/exec"; 
+    // --- 重要：貼上你的 Google Apps Script URL ---
+    const WEB_APP_URL = "在此貼上你的GAS網址"; 
+    let currentEditId = null;
 
     window.onload = displayRecords;
 
@@ -105,7 +123,23 @@
             date: new Date().toLocaleDateString()
         };
 
-        if(!record.shop || !record.drink) return alert('請填寫店名與品項');
+        if(!record.shop || !record.drink) return alert('店名與品項是必填的喔！');
+
+        if (currentEditId) {
+            // 執行修改邏輯 (僅更新手機本地顯示)
+            let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
+            let index = records.findIndex(r => r.id === currentEditId);
+            if(index !== -1) {
+                record.id = currentEditId;
+                record.date = records[index].date + " (已編輯)"; 
+                records[index] = record;
+                localStorage.setItem('myDrinkLogs', JSON.stringify(records));
+                alert('本地紀錄已更新！\n\n(工程師溫馨提示：此修改僅更新您手機的介面，Google Sheets 雲端資料庫需手動調整)');
+            }
+            cancelEdit();
+            displayRecords();
+            return;
+        }
 
         btn.disabled = true;
         btn.innerText = "連線雲端中...";
@@ -114,22 +148,62 @@
         if(WEB_APP_URL !== "在此貼上你的GAS網址") {
             try {
                 await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(record) });
-            } catch (e) { console.error("雲端同步失敗"); }
+            } catch (e) { 
+                console.error("雲端同步失敗", e); 
+            }
         }
 
-        // 本地儲存
+        // 本地儲存 (供快速反查)
         let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
         record.id = Date.now();
-        records.unshift(record);
+        records.unshift(record); // 把新紀錄塞到最前面
         localStorage.setItem('myDrinkLogs', JSON.stringify(records));
 
         // 重置 UI
         document.getElementById('drinkName').value = '';
         document.getElementById('note').value = '';
+        // 評價預設跳回好喝，或者你可以註解掉下面這行讓它保留上次選項
+        document.getElementById('rating').value = '👍 好喝'; 
+        
         displayRecords();
         btn.disabled = false;
         btn.innerText = "儲存紀錄並上傳雲端";
-        alert('儲存成功！');
+    }
+
+    function editRecord(id) {
+        let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
+        let record = records.find(r => r.id === id);
+        if(!record) return;
+
+        // 將資料填回上方表單
+        document.getElementById('shopName').value = record.shop;
+        document.getElementById('location').value = record.loc || '';
+        document.getElementById('drinkName').value = record.drink;
+        document.getElementById('sugar').value = record.sugar;
+        document.getElementById('ice').value = record.ice;
+        document.getElementById('rating').value = record.rating;
+        document.getElementById('note').value = record.note || '';
+
+        // 改變 UI 狀態進入編輯模式
+        currentEditId = id;
+        document.getElementById('saveBtn').innerText = "💾 更新本地紀錄";
+        document.getElementById('saveBtn').style.backgroundColor = "#3498db";
+        document.getElementById('cancelBtn').style.display = "block";
+        
+        // 自動捲動到最上方方便修改
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+        currentEditId = null;
+        document.getElementById('drinkName').value = '';
+        document.getElementById('note').value = '';
+        document.getElementById('rating').value = '👍 好喝'; 
+        
+        // 恢復按鈕預設樣式
+        document.getElementById('saveBtn').innerText = "儲存紀錄並上傳雲端";
+        document.getElementById('saveBtn').style.backgroundColor = "var(--primary-color)";
+        document.getElementById('cancelBtn').style.display = "none";
     }
 
     function displayRecords() {
@@ -137,10 +211,11 @@
         const term = document.getElementById('searchInput').value.toLowerCase();
         const records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
         
+        // 根據搜尋框過濾紀錄
         const filtered = records.filter(item => 
             item.shop.toLowerCase().includes(term) || 
             item.drink.toLowerCase().includes(term) || 
-            item.note.toLowerCase().includes(term)
+            (item.note && item.note.toLowerCase().includes(term))
         );
 
         list.innerHTML = '';
@@ -150,13 +225,23 @@
         }
 
         filtered.forEach(item => {
-            const isBad = item.rating.includes('👎');
+            // 判斷評價顏色
+            let ratingClass = 'good';
+            if (item.rating.includes('👎')) {
+                ratingClass = 'bad';
+            } else if (item.rating.includes('👌')) {
+                ratingClass = 'neutral';
+            }
+
             const div = document.createElement('div');
-            div.className = `record-item ${isBad ? 'bad' : 'good'}`;
+            div.className = `record-item ${ratingClass}`;
             div.innerHTML = `
-                <span class="delete-btn" onclick="deleteRecord(${item.id})">刪除</span>
+                <div class="action-buttons">
+                    <span class="action-btn edit" onclick="editRecord(${item.id})">編輯</span>
+                    <span class="action-btn delete" onclick="deleteRecord(${item.id})">刪除</span>
+                </div>
                 <div class="item-title">${item.drink}</div>
-                <div class="item-info">📍 ${item.shop} <span style="color:#999">(${item.loc})</span></div>
+                <div class="item-info">📍 ${item.shop} <span style="color:#999">(${item.loc || '未填寫地點'})</span></div>
                 <div style="margin-top:5px;">
                     <span class="tag">${item.sugar}</span>
                     <span class="tag">${item.ice}</span>
@@ -170,7 +255,7 @@
     }
 
     function deleteRecord(id) {
-        if(confirm('確定刪除此筆顯示？')) {
+        if(confirm('確定要從手機清除這筆顯示嗎？(不會影響 Google Sheet)')) {
             let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
             records = records.filter(r => r.id !== id);
             localStorage.setItem('myDrinkLogs', JSON.stringify(records));
