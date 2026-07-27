@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>飲料紀錄</title>
+    <title>飲料紀錄反查系統 v3.0 (純雲端運算版)</title>
     <style>
         :root { 
             --primary-color: #27ae60; 
@@ -45,77 +45,133 @@
         .action-btn.edit { color: var(--cloud-color); }
         .action-btn.delete { color: #ccc; }
         .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #eee; margin-right: 5px; }
+        
+        /* 頁籤切換樣式 */
+        .tab-nav { display: flex; gap: 8px; margin-bottom: 20px; background: #e0e6ed; padding: 6px; border-radius: 12px; }
+        .tab-btn { flex: 1; padding: 12px 0; text-align: center; border-radius: 8px; cursor: pointer; font-weight: bold; color: #7f8c8d; transition: all 0.2s ease; font-size: 15px; }
+        .tab-btn.active { background: white; color: var(--primary-color); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .tab-content { display: none; animation: fadeIn 0.3s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* 統計圖表樣式 */
+        .stat-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 15px; border: 1px solid #eee; }
+        .stat-title { font-size: 16px; font-weight: bold; margin-bottom: 12px; color: #2c3e50; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; display: flex; justify-content: space-between; }
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; align-items: center; }
+        .stat-bar-container { flex: 1; background: #f4f6f8; height: 10px; border-radius: 5px; margin: 0 12px; overflow: hidden; }
+        .stat-bar { height: 100%; background: var(--primary-color); border-radius: 5px; transition: width 0.8s ease-out; }
+        .stat-count { font-weight: bold; width: 45px; text-align: right; color: #555; }
+        .stat-name { width: 95px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🥤 飲料筆記</h2>
+    <h2>🥤 飲料開發筆記</h2>
     
-    <div class="form-group"><label>飲料店</label><input type="text" id="shopName" placeholder="例如：五十嵐、麻古"></div>
-    <div class="form-group"><label>地點</label><input type="text" id="location" placeholder="例如：三重自強店"></div>
-    <div class="form-group"><label>品項</label><input type="text" id="drinkName" placeholder="例如：金萱雙Q"></div>
-    
-    <div class="row">
-        <div class="form-group" style="flex:1.2">
-            <label>甜度</label>
-            <select id="sugar">
-                <option value="無糖">無糖</option>
-                <option value="一分糖" selected>一分糖</option>
-                <option value="微糖(3分)">微糖(3分)</option>
-                <option value="半糖(5分)">半糖(5分)</option>
-                <option value="少糖(7分)">少糖(7分)</option>
-                <option value="正常糖">正常糖</option>
-            </select>
+    <!-- 新增：頁籤導覽列 -->
+    <div class="tab-nav">
+        <div class="tab-btn active" onclick="switchTab('form')">📝 紀錄</div>
+        <div class="tab-btn" onclick="switchTab('list')">📜 反查</div>
+        <div class="tab-btn" onclick="switchTab('stats')">📊 統計</div>
+    </div>
+
+    <!-- 頁籤一：新增/編輯表單 -->
+    <div id="tab-form" class="tab-content active">
+        <div class="form-group">
+            <label>購買日期</label>
+            <input type="date" id="drinkDate">
         </div>
-        <div class="form-group" style="flex:1">
-            <label>冰塊</label>
-            <select id="ice">
-                <option value="微冰" selected>微冰</option>
-                <option value="少冰">少冰</option>
-                <option value="去冰">去冰</option>
-                <option value="正常">正常</option>
-                <option value="熱">熱</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>評價</label>
-        <select id="rating">
-            <option value="👍 好喝">👍 好喝，下次再點</option>
-            <option value="👌 還好">👌 還好，中規中矩</option>
-            <option value="👎 踩雷">👎 難喝，千萬別點</option>
-        </select>
-    </div>
-
-    <div class="form-group"><label>備註心得</label><textarea id="note" rows="2" placeholder="口感分享、珍珠Q度..."></textarea></div>
-
-    <div style="display: flex; gap: 10px;">
-        <button id="saveBtn" onclick="saveRecord()" style="flex: 2;">儲存紀錄並上傳雲端</button>
-        <button id="cancelBtn" onclick="cancelEdit()" style="flex: 1; display: none; background-color: #95a5a6;">取消</button>
-    </div>
-    
-    <button id="loadBtn" class="btn-cloud" onclick="loadFromCloud()">📥 從雲端載入最新紀錄</button>
-
-    <div class="search-section">
-        <label>🔍 快速反查歷史 (輸入關鍵字)</label>
-        <input type="text" id="searchInput" class="search-box" placeholder="搜尋店名、品項..." onkeyup="displayRecords()">
+        <div class="form-group"><label>飲料店</label><input type="text" id="shopName" placeholder="例如：五十嵐、麻古"></div>
+        <div class="form-group"><label>地點</label><input type="text" id="location" placeholder="例如：三重自強店"></div>
+        <div class="form-group"><label>品項</label><input type="text" id="drinkName" placeholder="例如：金萱雙Q"></div>
         
-        <div id="recordList" class="record-list"></div>
+        <div class="row">
+            <div class="form-group" style="flex:1.2">
+                <label>甜度</label>
+                <select id="sugar">
+                    <option value="無糖">無糖</option>
+                    <option value="一分糖" selected>一分糖</option>
+                    <option value="微糖(3分)">微糖(3分)</option>
+                    <option value="半糖(5分)">半糖(5分)</option>
+                    <option value="少糖(7分)">少糖(7分)</option>
+                    <option value="正常糖">正常糖</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex:1">
+                <label>冰塊</label>
+                <select id="ice">
+                    <option value="微冰" selected>微冰</option>
+                    <option value="少冰">少冰</option>
+                    <option value="去冰">去冰</option>
+                    <option value="正常">正常</option>
+                    <option value="熱">熱</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>評價</label>
+            <select id="rating">
+                <option value="👍 好喝">👍 好喝，下次再點</option>
+                <option value="👌 還好">👌 還好，中規中矩</option>
+                <option value="👎 踩雷">👎 難喝，千萬別點</option>
+            </select>
+        </div>
+
+        <div class="form-group"><label>備註心得</label><textarea id="note" rows="2" placeholder="口感分享、珍珠Q度..."></textarea></div>
+
+        <div style="display: flex; gap: 10px;">
+            <button id="saveBtn" onclick="saveRecord()" style="flex: 2;">💾 儲存並上傳雲端</button>
+            <button id="cancelBtn" onclick="cancelEdit()" style="flex: 1; display: none; background-color: #95a5a6;">取消</button>
+        </div>
+    </div>
+    
+    <!-- 頁籤二：反查清單 -->
+    <div id="tab-list" class="tab-content">
+        <div class="search-section" style="margin-top: 0; border-top: none; padding-top: 0;">
+            <label>🔍 快速反查歷史 (輸入關鍵字)</label>
+            <input type="text" id="searchInput" class="search-box" placeholder="搜尋店名、品項..." onkeyup="displayRecords()">
+            
+            <div id="loadingStatus" class="loading-text">🔄 正在與雲端同步資料中...</div>
+            <div id="recordList" class="record-list"></div>
+        </div>
+    </div>
+
+    <!-- 頁籤三：統計數據 -->
+    <div id="tab-stats" class="tab-content">
+        <div id="statsContainer">
+            <div style="text-align:center; color:#999; margin-top:20px;">資料載入中...</div>
+        </div>
     </div>
 </div>
 
 <script>
     // --- 重要：貼上你的 Google Apps Script URL ---
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWzUhwBnoYacz-Ncj0npr1ZpKPc7eXqiL6DLJcGsl93URkQkBnL5uSirAGydxcHPVMYw/exec"; 
+    
     let currentEditId = null;
+    let cloudRecords = []; // 取代原本的 localStorage，現在所有資料存在這個記憶體變數中
 
-    window.onload = displayRecords;
+    // 網頁載入時自動執行
+    window.onload = function() {
+        setDefaultDate();
+        loadFromCloud(); // 自動從雲端載入最新資料
+    };
+
+    // 設定預設日期為今天 (YYYY-MM-DD)
+    function setDefaultDate() {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        document.getElementById('drinkDate').value = `${year}-${month}-${day}`;
+    }
 
     async function saveRecord() {
         const btn = document.getElementById('saveBtn');
         const record = {
+            date: document.getElementById('drinkDate').value,
             shop: document.getElementById('shopName').value,
             loc: document.getElementById('location').value,
             drink: document.getElementById('drinkName').value,
@@ -126,145 +182,101 @@
         };
 
         if(!record.shop || !record.drink) return alert('店名與品項是必填的喔！');
+        if(!record.date) return alert('請選擇購買日期！');
 
         btn.disabled = true;
 
         if (currentEditId) {
             // -- 修改模式 --
-            let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
-            let index = records.findIndex(r => r.id === currentEditId);
+            btn.innerText = "☁️ 雲端同步更新中...";
+            record.id = currentEditId;
+            record.action = "update";
             
-            if(index !== -1) {
-                btn.innerText = "雲端同步更新中...";
-                record.id = currentEditId;
-                record.action = "update"; // 告訴 GAS 這是更新
-                record.originalDate = records[index].date; // 提供舊的日期供 GAS 尋找
-                record.date = records[index].date; // 保持原本紀錄的日期時間不變
+            // 找出舊的日期供 GAS 尋找對應的列
+            let oldRecord = cloudRecords.find(r => r.id === currentEditId);
+            record.originalDate = oldRecord ? oldRecord.date : record.date; 
 
-                if(WEB_APP_URL !== "在此貼上你的GAS網址") {
-                    try {
-                        await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(record) });
-                    } catch (e) { console.error("雲端更新失敗", e); }
-                }
-
-                records[index] = record;
-                localStorage.setItem('myDrinkLogs', JSON.stringify(records));
-                alert('✅ 紀錄已成功更新，並同步至雲端資料庫！');
+            if(WEB_APP_URL !== "在此貼上你的GAS網址") {
+                try {
+                    await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(record) });
+                } catch (e) { console.error("雲端更新失敗", e); }
             }
+            
             cancelEdit();
-            displayRecords();
-            btn.disabled = false;
-            return;
-        }
+        } else {
+            // -- 新增模式 --
+            btn.innerText = "☁️ 正在上傳至雲端...";
+            record.id = Date.now();
+            record.action = "add";
 
-        // -- 新增模式 --
-        btn.innerText = "連線雲端中...";
-        record.id = Date.now();
-        record.action = "add";
-        record.date = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString('zh-TW', {hour12: false}).slice(0, 5);
-
-        if(WEB_APP_URL !== "在此貼上你的GAS網址") {
-            try {
-                await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(record) });
-            } catch (e) { 
-                console.error("雲端同步失敗", e); 
+            if(WEB_APP_URL !== "在此貼上你的GAS網址") {
+                try {
+                    await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(record) });
+                } catch (e) { console.error("雲端上傳失敗", e); }
             }
+            
+            // 新增成功後清空表單
+            document.getElementById('drinkName').value = '';
+            document.getElementById('note').value = '';
+            document.getElementById('rating').value = '👍 好喝'; 
+            setDefaultDate(); // 重置回今天
         }
 
-        let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
-        records.unshift(record);
-        localStorage.setItem('myDrinkLogs', JSON.stringify(records));
-
-        document.getElementById('drinkName').value = '';
-        document.getElementById('note').value = '';
-        document.getElementById('rating').value = '👍 好喝'; 
+        // 動作完成後，直接重新從雲端拉取最新資料，確保 100% 同步
+        await loadFromCloud();
         
-        displayRecords();
         btn.disabled = false;
-        btn.innerText = "儲存紀錄並上傳雲端";
+        btn.innerText = "💾 儲存並上傳雲端";
     }
 
     async function loadFromCloud() {
         if(WEB_APP_URL === "在此貼上你的GAS網址") return alert("請先在程式碼內設定 GAS 網址！");
 
-        const btn = document.getElementById('loadBtn');
-        btn.disabled = true;
-        btn.innerText = "正在從 Google Sheets 載入... ⏳";
+        const status = document.getElementById('loadingStatus');
+        const list = document.getElementById('recordList');
+        
+        status.style.display = 'block';
+        list.style.opacity = '0.5'; // 讓舊清單變半透明表示正在更新
 
         try {
-            // 增加快取控制與重新導向設定，確保拉到最新資料
+            // 透過強制無快取確保拿到最新鮮的資料
             const response = await fetch(WEB_APP_URL, {
                 method: 'GET',
                 redirect: 'follow', 
-                cache: 'no-cache' // 強制不使用快取
+                cache: 'no-cache' 
             });
             
-            const textData = await response.text(); // 先轉純文字，方便報錯時查看
+            const textData = await response.text(); 
             
-            let cloudRecords;
             try {
-                cloudRecords = JSON.parse(textData);
+                cloudRecords = JSON.parse(textData); // 將資料存在記憶體變數中
             } catch (parseError) {
-                console.error("回傳內容無法解析：", textData);
-                throw new Error("回傳格式錯誤！請確認 GAS 已重新部署為「新版本」。");
+                console.error("解析失敗：", textData);
+                throw new Error("格式錯誤");
             }
 
-            if (cloudRecords && Array.isArray(cloudRecords) && cloudRecords.length > 0) {
-                localStorage.setItem('myDrinkLogs', JSON.stringify(cloudRecords));
-                displayRecords();
-                alert(`✅ 同步成功！共載入了 ${cloudRecords.length} 筆最新紀錄。`);
-            } else {
-                alert('雲端目前沒有任何紀錄，或是讀取到空陣列。');
-            }
+            if (cloudRecords && Array.isArray(cloudRecords)) {
+                displayRecords(); // 渲染畫面
+                renderStats();    // 新增：渲染統計畫面
+            } 
         } catch (error) {
             console.error("載入失敗", error);
-            alert("載入失敗 ❌\n錯誤訊息：" + error.message + "\n\n常見原因：\n1. 您可能忘記將 GAS 重新部署為「新版本」\n2. 部署權限未設為「所有人」");
+            status.innerText = "❌ 載入失敗，請檢查網路連線";
+            setTimeout(() => { status.style.display = 'none'; }, 3000);
         } finally {
-            btn.disabled = false;
-            btn.innerText = "📥 從雲端載入最新紀錄";
+            status.style.display = 'none';
+            list.style.opacity = '1';
+            // 恢復預設文字以防下次載入時顯示錯誤訊息
+            setTimeout(() => { status.innerText = "🔄 正在與雲端同步資料中..."; }, 3500);
         }
-    }
-
-    function editRecord(id) {
-        let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
-        let record = records.find(r => r.id === id);
-        if(!record) return;
-
-        document.getElementById('shopName').value = record.shop;
-        document.getElementById('location').value = record.loc || '';
-        document.getElementById('drinkName').value = record.drink;
-        document.getElementById('sugar').value = record.sugar;
-        document.getElementById('ice').value = record.ice;
-        document.getElementById('rating').value = record.rating;
-        document.getElementById('note').value = record.note || '';
-
-        currentEditId = id;
-        document.getElementById('saveBtn').innerText = "💾 儲存修改並同步雲端";
-        document.getElementById('saveBtn').style.backgroundColor = "#3498db";
-        document.getElementById('cancelBtn').style.display = "block";
-        document.getElementById('loadBtn').style.display = "none";
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function cancelEdit() {
-        currentEditId = null;
-        document.getElementById('drinkName').value = '';
-        document.getElementById('note').value = '';
-        document.getElementById('rating').value = '👍 好喝'; 
-        
-        document.getElementById('saveBtn').innerText = "儲存紀錄並上傳雲端";
-        document.getElementById('saveBtn').style.backgroundColor = "var(--primary-color)";
-        document.getElementById('cancelBtn').style.display = "none";
-        document.getElementById('loadBtn').style.display = "block";
     }
 
     function displayRecords() {
         const list = document.getElementById('recordList');
         const term = document.getElementById('searchInput').value.toLowerCase();
-        const records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
         
-        const filtered = records.filter(item => 
+        // 根據搜尋框過濾記憶體中的雲端資料
+        const filtered = cloudRecords.filter(item => 
             item.shop.toLowerCase().includes(term) || 
             item.drink.toLowerCase().includes(term) || 
             (item.note && item.note.toLowerCase().includes(term))
@@ -272,7 +284,7 @@
 
         list.innerHTML = '';
         if (filtered.length === 0) {
-            list.innerHTML = '<div style="text-align:center; color:#999; margin-top:20px;">尚無相符紀錄</div>';
+            list.innerHTML = '<div style="text-align:center; color:#999; margin-top:20px;">尚無相符紀錄或雲端為空</div>';
             return;
         }
 
@@ -283,49 +295,193 @@
 
             const div = document.createElement('div');
             div.className = `record-item ${ratingClass}`;
+            
+            // 檢查日期的格式，如果包含 T 或是過長的格式，稍微美化它
+            let displayDate = item.date;
+            if(displayDate && displayDate.includes('T')) {
+                displayDate = displayDate.split('T')[0];
+            }
+
             div.innerHTML = `
                 <div class="action-buttons">
                     <span class="action-btn edit" onclick="editRecord(${item.id})">編輯</span>
                     <span class="action-btn delete" onclick="deleteRecord(${item.id})">刪除</span>
                 </div>
                 <div class="item-title">${item.drink}</div>
-                <div class="item-info">📍 ${item.shop} <span style="color:#999">(${item.loc || '未填寫地點'})</span></div>
+                <div class="item-info">📍 ${item.shop} <span style="color:#999">(${item.loc || '未填寫'})</span></div>
                 <div style="margin-top:5px;">
                     <span class="tag">${item.sugar}</span>
                     <span class="tag">${item.ice}</span>
                     <span class="tag">${item.rating}</span>
                 </div>
                 ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
-                <div style="font-size: 10px; color: #ccc; margin-top: 10px;">紀錄日期: ${item.date}</div>
+                <div style="font-size: 12px; color: #aaa; margin-top: 10px; font-weight: bold;">📅 購買日期: ${displayDate}</div>
             `;
             list.appendChild(div);
         });
     }
 
-    async function deleteRecord(id) {
-        if(confirm('確定要刪除這筆紀錄嗎？\n(這將同時刪除手機與 Google Sheets 雲端的資料)')) {
-            let records = JSON.parse(localStorage.getItem('myDrinkLogs') || '[]');
-            let recordToDelete = records.find(r => r.id === id);
-            
-            // 先從本地移除以達到即時反應
-            records = records.filter(r => r.id !== id);
-            localStorage.setItem('myDrinkLogs', JSON.stringify(records));
-            displayRecords();
+    function editRecord(id) {
+        let record = cloudRecords.find(r => r.id === id);
+        if(!record) return;
 
-            // 呼叫雲端進行刪除
-            if(recordToDelete && WEB_APP_URL !== "https://script.google.com/macros/s/AKfycbwWzUhwBnoYacz-Ncj0npr1ZpKPc7eXqiL6DLJcGsl93URkQkBnL5uSirAGydxcHPVMYw/exec") {
+        // 新增：點擊編輯時，自動切換回表單頁籤
+        switchTab('form');
+
+        // 嘗試解析日期填回 Date Picker
+        let dateVal = record.date;
+        if(dateVal && dateVal.includes('T')) dateVal = dateVal.split('T')[0];
+        // 處理如果在 GAS 端是 YYYY/MM/DD 的舊格式
+        if(dateVal && dateVal.includes('/')) dateVal = dateVal.replace(/\//g, '-');
+
+        document.getElementById('drinkDate').value = dateVal || document.getElementById('drinkDate').value;
+        document.getElementById('shopName').value = record.shop;
+        document.getElementById('location').value = record.loc || '';
+        document.getElementById('drinkName').value = record.drink;
+        document.getElementById('sugar').value = record.sugar;
+        document.getElementById('ice').value = record.ice;
+        document.getElementById('rating').value = record.rating;
+        document.getElementById('note').value = record.note || '';
+
+        currentEditId = id;
+        document.getElementById('saveBtn').innerText = "💾 儲存修改至雲端";
+        document.getElementById('saveBtn').style.backgroundColor = "#3498db";
+        document.getElementById('cancelBtn').style.display = "block";
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+        currentEditId = null;
+        document.getElementById('drinkName').value = '';
+        document.getElementById('note').value = '';
+        document.getElementById('rating').value = '👍 好喝'; 
+        setDefaultDate();
+        
+        document.getElementById('saveBtn').innerText = "💾 儲存並上傳雲端";
+        document.getElementById('saveBtn').style.backgroundColor = "var(--primary-color)";
+        document.getElementById('cancelBtn').style.display = "none";
+    }
+
+    async function deleteRecord(id) {
+        if(confirm('確定要刪除這筆紀錄嗎？\n(將直接從 Google Sheets 永久刪除)')) {
+            let recordToDelete = cloudRecords.find(r => r.id === id);
+            if(!recordToDelete) return;
+
+            // 讓該卡片在畫面上暫時消失增加流暢感
+            const list = document.getElementById('recordList');
+            list.style.opacity = '0.5';
+
+            if(WEB_APP_URL !== "在此貼上你的GAS網址") {
                 try {
                     const payload = {
                         action: 'delete',
                         id: recordToDelete.id,
                         originalDate: recordToDelete.date
                     };
+                    // 送出刪除指令
                     await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+                    
+                    // 刪除完成後，重新向雲端要最新資料
+                    await loadFromCloud();
                 } catch (e) {
                     console.error("雲端刪除失敗", e);
+                    alert("刪除失敗，請檢查網路連線");
+                    list.style.opacity = '1';
                 }
             }
         }
+    }
+
+    // --- 以下為新增的頁籤與統計功能函數 ---
+    
+    function switchTab(tabId) {
+        // 移除所有按鈕和內容的 active 狀態
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        // 啟動點擊的頁籤
+        if(tabId === 'form') document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        if(tabId === 'list') document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        if(tabId === 'stats') document.querySelectorAll('.tab-btn')[2].classList.add('active');
+
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+
+        // 若切換到統計頁，確保重新計算並繪製
+        if(tabId === 'stats') {
+            renderStats();
+        }
+    }
+
+    function renderStats() {
+        const container = document.getElementById('statsContainer');
+        if (!cloudRecords || cloudRecords.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:#999; margin-top:20px;">尚無紀錄可供統計 🥤</div>';
+            return;
+        }
+
+        let shopCounts = {};
+        let drinkCounts = {};
+        let badDrinks = 0;
+
+        // 計算各店名與品項的次數
+        cloudRecords.forEach(r => {
+            if (r.shop) shopCounts[r.shop] = (shopCounts[r.shop] || 0) + 1;
+            if (r.drink) drinkCounts[r.drink] = (drinkCounts[r.drink] || 0) + 1;
+            if (r.rating && r.rating.includes('👎')) badDrinks++;
+        });
+
+        // 轉換為陣列並由高到低排序
+        let sortedShops = Object.entries(shopCounts).sort((a, b) => b[1] - a[1]);
+        let sortedDrinks = Object.entries(drinkCounts).sort((a, b) => b[1] - a[1]);
+
+        // 組裝統計面板 HTML
+        let html = `
+            <div class="stat-card">
+                <div class="stat-title">🏪 最常光顧的飲料店</div>
+                ${buildStatRows(sortedShops)}
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-title">👑 最受寵幸的品項</div>
+                ${buildStatRows(sortedDrinks)}
+            </div>
+
+            <div style="text-align:center; color:#888; font-size: 13px; margin-top: 15px;">
+                📊 總共紀錄了 <strong>${cloudRecords.length}</strong> 杯飲料<br>
+                💣 成功避雷次數：<strong>${badDrinks}</strong> 次
+            </div>
+        `;
+        container.innerHTML = html;
+    }
+
+    function buildStatRows(sortedArray) {
+        if(sortedArray.length === 0) return '<div style="color:#999; font-size:13px; text-align:center;">無資料</div>';
+        
+        let html = '';
+        // 只取前 5 名，避免手機畫面過長
+        let top5 = sortedArray.slice(0, 5);
+        let maxCount = top5[0][1]; // 取最高次數作為進度條 100% 的基準
+
+        top5.forEach((item, index) => {
+            let percent = (item[1] / maxCount) * 100;
+            // 前三名加上獎牌 icon
+            let icon = '';
+            if(index === 0) icon = '🥇 ';
+            else if(index === 1) icon = '🥈 ';
+            else if(index === 2) icon = '🥉 ';
+
+            html += `
+                <div class="stat-row">
+                    <div class="stat-name" title="${item[0]}">${icon}${item[0]}</div>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar" style="width: ${percent}%;"></div>
+                    </div>
+                    <div class="stat-count">${item[1]} 次</div>
+                </div>
+            `;
+        });
+        return html;
     }
 </script>
 
