@@ -1,489 +1,291 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>飲料紀錄反查系統 v3.0 (純雲端運算版)</title>
-    <style>
-        :root { 
-            --primary-color: #27ae60; 
-            --danger-color: #e74c3c;  
-            --neutral-color: #95a5a6; 
-            --accent-color: #f1c40f; 
-            --cloud-color: #3498db;   
-        }
-        body { font-family: -apple-system, system-ui, sans-serif; background-color: #f4f6f8; padding: 15px; margin: 0; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-        h2 { text-align: center; color: #333; margin-top: 0; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 14px; color: #666; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary-color); outline: none; }
-        .row { display: flex; gap: 10px; }
-        button { width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: background 0.2s; }
-        button:active { transform: scale(0.98); }
-        button:disabled { opacity: 0.7; cursor: not-allowed; }
-        
-        .btn-cloud { background: var(--cloud-color); margin-top: 10px; font-size: 16px; }
-        .btn-cloud:hover { background: #2980b9; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f2e9">
+<meta name="description" content="記下每一杯飲料的甜度、冰塊與心得，隨時找回喜歡的味道。">
+<title>飲料開發筆記</title>
+<style>
+:root{color-scheme:light;--green:#286449;--green-dark:#1d4d37;--green-soft:#edf4ed;--ink:#243c30;--muted:#70796f;--line:#e3e8df;--paper:#fff;--bg:#f7f8f4;--danger:#a54435;--warning:#855d16;--shadow:0 5px 20px #273f3010}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;font-size:15px;line-height:1.55;-webkit-tap-highlight-color:transparent}button,input,select,textarea{font:inherit}button{cursor:pointer}button,input,select,textarea{touch-action:manipulation}button:disabled{cursor:wait;opacity:.6}button:focus-visible,a:focus-visible{outline:3px solid #79a78a;outline-offset:3px}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px #28644912}input:disabled,select:disabled,textarea:disabled{opacity:.7}button{color:inherit}button svg{flex-shrink:0}.icon{width:20px;height:20px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.app{width:100%;max-width:500px;margin:0 auto;min-height:100dvh;padding:0 20px 24px}.app-header{padding:30px 0 22px;display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;background:var(--green);color:#fff;border-radius:16px;display:grid;place-items:center;transform:rotate(-5deg)}.logo svg{width:29px;height:29px;transform:rotate(5deg)}h1{font-size:22px;letter-spacing:1px;line-height:1.3;margin:0 0 4px;font-weight:750}.subtitle{font-size:12px;color:var(--muted);margin:0;letter-spacing:.6px}.header-copy{flex:1}.connection-dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#9b8871;margin-right:5px}.connection-dot.online{background:#3c8557}.connection-dot.error{background:#c27443}.tabs-wrap{position:sticky;top:0;z-index:5;background:var(--bg);padding:0 0 18px;padding-top:max(0px,env(safe-area-inset-top))}.tabs{display:flex;gap:4px;padding:5px;background:#e9eee5;border-radius:15px}.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;border:0;border-radius:11px;background:transparent;font-size:14px;font-weight:650;color:#667261}.tab-btn[aria-selected="true"]{background:var(--paper);color:var(--green);box-shadow:0 2px 5px #233b3010}.tab-btn .icon{width:18px;height:18px}[hidden]{display:none!important}.intro{margin:0 0 18px}.eyebrow{font-size:11px;letter-spacing:1.5px;color:var(--green);font-weight:750;margin:0 0 6px}.intro h2{font-size:23px;letter-spacing:.4px;line-height:1.4;margin:0 0 4px}.intro p{margin:0;color:var(--muted);font-size:13px}.card{background:var(--paper);border:1px solid var(--line);border-radius:19px;padding:19px;margin-bottom:14px;box-shadow:var(--shadow)}.card-heading{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;margin:0 0 17px}.card-heading .icon{color:var(--green);width:18px;height:18px}.step{margin-left:auto;font-size:10px;letter-spacing:1px;color:#9aab95}.field{margin-bottom:17px}.field:last-child{margin-bottom:0}label,.field-label{display:block;font-size:13px;color:#536150;font-weight:600;margin-bottom:7px}.required{color:var(--green);margin-left:3px}.optional{font-size:11px;color:#83907f;font-weight:400;margin-left:5px}input,select,textarea{width:100%;min-width:0;min-height:48px;background:#fcfdfb;border:1px solid #dfe5da;border-radius:11px;padding:11px 12px;color:var(--ink);font-size:16px;transition:border-color .15s,box-shadow .15s}input::placeholder,textarea::placeholder{color:#9ba494;font-size:14px}input[type="date"]{min-height:48px;-webkit-appearance:none;appearance:none}input::-webkit-date-and-time-value{text-align:left}textarea{resize:vertical;min-height:88px;line-height:1.6}.row{display:flex;gap:12px}.row>.field{flex:1;min-width:0}.rating-field{border:0;padding:0;margin:0 0 17px;min-width:0}.rating-field legend{padding:0;margin-bottom:9px}.rating-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.rating-option{position:relative;display:block;margin:0;cursor:pointer}.rating-option input{position:absolute;opacity:0;width:1px;min-height:0;height:1px}.rating-face{min-height:77px;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#fcfdfb;color:#6c7667;font-size:12px;transition:background .15s,border-color .15s}.rating-face .emoji{font-size:23px;line-height:1.3}.rating-option input:checked+.rating-face{border-color:var(--green);background:var(--green-soft);color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}.rating-option input[value="👎 踩雷"]:checked+.rating-face{border-color:#b35b44;background:#fff3ef;color:var(--danger);box-shadow:inset 0 0 0 1px #b35b44}.rating-option input:focus-visible+.rating-face{outline:3px solid #79a78a;outline-offset:3px}.save-bar{position:sticky;bottom:0;z-index:4;padding:12px 0 max(14px,env(safe-area-inset-bottom));background:linear-gradient(#f7f8f400,var(--bg) 15%);display:flex;gap:10px}.primary,.secondary{border:0;border-radius:13px;min-height:52px;padding:12px 16px;font-size:15px;font-weight:650;display:flex;justify-content:center;align-items:center;gap:8px}.primary{background:var(--green);color:white;box-shadow:0 4px 10px #28644920;flex:1}.primary:hover:enabled{background:var(--green-dark)}.secondary{background:#e7ece3;color:#52634a}.draft-hint{margin:-2px 0 0;text-align:center;font-size:11px;color:#818a7a}.sync-line{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.text-button{border:0;background:transparent;display:inline-flex;align-items:center;gap:5px;padding:8px;min-height:40px;border-radius:8px;color:var(--green);font-size:12px}.text-button .icon{width:15px;height:15px}.notice{padding:12px 14px;margin-bottom:16px;border:1px solid #e7d5af;background:#fff9ed;color:#75571f;border-radius:12px;font-size:13px;white-space:pre-line}.notice.success{background:var(--green-soft);color:var(--green);border-color:#d0e3d0}.search-wrap{position:relative}.search-wrap>.icon{position:absolute;top:15px;left:14px;color:#829078}.search-wrap input{padding-left:43px;padding-right:44px;background:#fff}.clear-search{position:absolute;right:3px;top:3px;min-height:43px;width:40px;border:0;background:transparent;color:#7e8975;font-size:22px}.filter-row{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#fff;border-radius:20px;padding:8px 13px;min-height:40px;font-size:12px;color:#6c7667}.filter[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:white}.list-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:15px 0 12px;color:var(--muted);font-size:12px}.list-meta select{width:auto;min-height:40px;padding:6px 26px 6px 10px;font-size:12px;background:transparent;border:0}.record-item{padding:17px;background:#fff;border:1px solid var(--line);border-radius:16px;margin:0 0 12px;box-shadow:var(--shadow)}.record-top{display:flex;gap:10px;align-items:flex-start}.record-head{min-width:0;flex:1}.item-title{font-size:17px;font-weight:700;overflow-wrap:anywhere;margin:0 0 3px}.item-info{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.rating-badge{padding:4px 8px;border-radius:7px;background:var(--green-soft);color:var(--green);font-size:11px;white-space:nowrap}.record-item.bad .rating-badge{background:#fff0e9;color:#9a4e35}.record-item.neutral .rating-badge{background:#f1f1e9;color:#767654}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.tag{font-size:11px;color:#65715f;background:#f3f5ef;border-radius:6px;padding:4px 8px}.item-note{font-size:13px;color:#69735f;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;border-top:1px solid #edf0e9;padding-top:12px;margin:12px 0 0}.record-footer{display:flex;align-items:center;gap:3px;margin-top:11px}.record-date{font-size:11px;color:#8b9483;flex:1}.action-btn{border:0;background:transparent;border-radius:8px;min-height:44px;padding:8px 10px;color:var(--green);font-size:12px}.action-btn.delete{color:#a47567}.empty{text-align:center;padding:45px 16px;background:#fff;border:1px dashed #dce3d5;border-radius:16px}.empty-icon{font-size:32px;display:block;margin-bottom:10px}.empty h3{font-size:16px;margin:0 0 6px}.empty p{color:var(--muted);font-size:13px;margin:0}.empty .secondary{margin:18px auto 0;font-size:13px;min-height:44px}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:18px}.summary-item{background:#edf2e9;border-radius:13px;padding:15px 8px;text-align:center}.summary-item strong{display:block;font-size:25px;color:var(--green);font-variant-numeric:tabular-nums;line-height:1.3}.summary-item span{font-size:11px;color:#748069}.stat-title{font-size:15px;margin:0 0 18px;display:flex;justify-content:space-between;align-items:center}.stat-title small{font-size:10px;color:#8a957f;font-weight:400;letter-spacing:1px}.stat-row{margin-bottom:16px}.stat-row:last-child{margin-bottom:0}.stat-label{display:flex;gap:8px;align-items:baseline;font-size:13px;margin-bottom:7px}.stat-rank{color:#91a184;font-size:11px;width:14px}.stat-name{flex:1;min-width:0;overflow-wrap:anywhere}.stat-count{font-size:11px;color:#7b8971;white-space:nowrap}.stat-track{height:6px;background:#eff3e9;border-radius:4px;overflow:hidden;margin-left:22px}.stat-bar{height:100%;background:#8da888;border-radius:4px}.stat-row:first-child .stat-bar{background:var(--green)}.stats-foot{text-align:center;color:#7c8773;font-size:12px;padding:5px 0 15px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.app-footer a{color:var(--green);text-decoration:none;display:inline-block;padding:10px}.app-footer{text-align:center;color:#8b9481;font-size:10px;letter-spacing:1px;margin-top:18px}.dialog{width:calc(100% - 40px);max-width:370px;border:1px solid var(--line);border-radius:19px;padding:24px;color:var(--ink);box-shadow:0 20px 60px #1c332333}.dialog::backdrop{background:#20302366}.dialog h2{font-size:19px;margin:0 0 10px}.dialog p{font-size:14px;color:var(--muted);overflow-wrap:anywhere}.dialog-actions{display:flex;gap:10px;margin-top:22px}.dialog-actions button{flex:1}.danger{background:var(--danger)}.danger:hover:enabled{background:#893729}.spinning{animation:spin 1.2s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(min-width:600px){.app{padding-top:15px;padding-bottom:40px}.app-header{padding-top:26px}}@media(max-width:350px){.app{padding-left:14px;padding-right:14px}.card{padding:16px}.filter{padding:8px 10px}h1{font-size:20px}.rating-options{gap:6px}.row{gap:8px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
-        .search-section { margin-top: 30px; border-top: 2px dashed #eee; padding-top: 20px; }
-        .search-box { background-color: #fff9e6; border: 2px solid var(--accent-color); font-weight: bold; }
-        
-        .record-list { margin-top: 15px; }
-        .record-item { background: #fff; border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #eee; position: relative; }
-        
-        .record-item.good { border-left: 8px solid var(--primary-color); }
-        .record-item.neutral { border-left: 8px solid var(--neutral-color); }
-        .record-item.bad { border-left: 8px solid var(--danger-color); }
-        
-        .item-title { font-weight: bold; font-size: 18px; color: #111; }
-        .item-info { font-size: 14px; color: #555; margin-top: 3px; }
-        .item-note { font-size: 13px; color: #777; background: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 8px; border-left: 2px solid #ddd; }
-        .action-buttons { position: absolute; right: 12px; top: 12px; display: flex; gap: 15px; }
-        .action-btn { cursor: pointer; font-size: 13px; font-weight: bold; }
-        .action-btn.edit { color: var(--cloud-color); }
-        .action-btn.delete { color: #ccc; }
-        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #eee; margin-right: 5px; }
-        
-        /* 頁籤切換樣式 */
-        .tab-nav { display: flex; gap: 8px; margin-bottom: 20px; background: #e0e6ed; padding: 6px; border-radius: 12px; }
-        .tab-btn { flex: 1; padding: 12px 0; text-align: center; border-radius: 8px; cursor: pointer; font-weight: bold; color: #7f8c8d; transition: all 0.2s ease; font-size: 15px; }
-        .tab-btn.active { background: white; color: var(--primary-color); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        .tab-content { display: none; animation: fadeIn 0.3s; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* 統計圖表樣式 */
-        .stat-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 15px; border: 1px solid #eee; }
-        .stat-title { font-size: 16px; font-weight: bold; margin-bottom: 12px; color: #2c3e50; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; display: flex; justify-content: space-between; }
-        .stat-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; align-items: center; }
-        .stat-bar-container { flex: 1; background: #f4f6f8; height: 10px; border-radius: 5px; margin: 0 12px; overflow: hidden; }
-        .stat-bar { height: 100%; background: var(--primary-color); border-radius: 5px; transition: width 0.8s ease-out; }
-        .stat-count { font-weight: bold; width: 45px; text-align: right; color: #555; }
-        .stat-name { width: 95px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
-    </style>
+/* 奶油、森林綠與琥珀：手機直式手帳 */
+:root{--green:#205b4d;--green-dark:#143f35;--green-soft:#e9f2e9;--ink:#263d35;--muted:#74796d;--line:#e9e3d8;--paper:#fffefa;--bg:#f7f2e9;--shadow:0 6px 20px #59432d07;--amber:#ce9a4a;--peach:#e4b090}
+body{background:radial-gradient(ellipse at 0 0,#ecdeca80,transparent 55%),var(--bg);background-attachment:fixed}.app-header{padding-top:27px;padding-bottom:23px}.logo{background:linear-gradient(145deg,#327764,#153e35);box-shadow:0 5px 12px #205b4d25,0 0 0 5px #fffaf1;border:1px solid #427866}.subtitle{letter-spacing:1.3px;font-size:10px;color:#8a816e}h1{font-size:21px;letter-spacing:1.6px}.brand-seal{margin-left:auto;width:38px;height:38px;display:grid;place-items:center;border:1px solid #d8ba87;border-radius:50%;color:#987741;font-size:19px;background:#fff9ed;flex-shrink:0}.tabs-wrap{padding-bottom:20px}.tabs{background:#ebe5d9;border:1px solid #e4ddcf;gap:3px;padding:5px;border-radius:17px}.tab-btn{gap:5px;font-size:13px;min-width:0}.tab-btn[aria-selected="true"]{background:linear-gradient(145deg,#2e715e,#1b5143);color:#fff7df;box-shadow:0 3px 8px #16493a24}.tab-btn .icon{width:17px;height:17px}.intro h2{font-size:25px;letter-spacing:.7px}.intro .eyebrow{font-size:10px;font-weight:750;letter-spacing:2.2px;color:#9a7a45;margin-bottom:8px}.intro p{line-height:1.7}.journal-hero{position:relative;isolation:isolate;overflow:hidden;min-height:205px;border-radius:23px;padding:24px 20px 20px;margin-bottom:23px;color:#fff9e9;background:radial-gradient(ellipse at 100% 0,#61957a55,transparent 65%),linear-gradient(125deg,#225b4a,#143e35);box-shadow:0 10px 22px #205b4d20;border:1px solid #3f7561}.journal-hero::after{content:'';position:absolute;z-index:-1;width:155px;height:155px;border:1px solid #e4c28a23;border-radius:50%;right:-38px;top:-43px}.journal-hero .eyebrow{color:#e3c18b;font-size:9px;letter-spacing:2.6px}.journal-hero h2{font-size:24px;max-width:72%;margin-bottom:8px;position:relative;z-index:1}.journal-hero #formDescription{font-size:12px;color:#c9d9c7;max-width:65%;position:relative;z-index:1}.hero-caption{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.5px;color:#ead5b2;margin-top:22px;border-top:1px solid #ffffff24;padding-top:12px;max-width:70%;position:relative;z-index:1}.hero-caption::before{content:'✦';color:#e6ba72}.hero-art{position:absolute;right:-3px;bottom:-4px;width:140px;height:168px;z-index:0}.card{background:linear-gradient(145deg,#fffefa,#fffdf8);border-radius:19px;border-color:#e6dfd2;box-shadow:0 5px 17px #6e503108}.card-heading .icon{background:#edf1e5;box-sizing:content-box;padding:6px;border-radius:9px}.card-heading{margin-bottom:18px;color:#315446}.step{color:#a88b5c;font-size:12px;font-family:Georgia,serif;font-style:italic}.field label{color:#5c6455}input,select,textarea{background:#fcfaf5;border-color:#e4e0d5}input::placeholder,textarea::placeholder{color:#99998b}.rating-face{background:#fbf9f2;border-color:#e7e0d3}.rating-option input:checked+.rating-face{background:linear-gradient(145deg,#edf5e9,#e3eddf)}.rating-option input[value="👌 還好"]:checked+.rating-face{border-color:#b4934e;color:#7a622e;background:#faf0d9;box-shadow:inset 0 0 0 1px #b4934e}.primary{background:linear-gradient(125deg,#2e745e,#194d40);box-shadow:0 5px 12px #1f564a24;border:1px solid #ffffff12}.primary:hover:enabled{background:linear-gradient(125deg,#245c4b,#143c33)}.danger{background:var(--danger)}.danger:hover:enabled{background:#893729}.secondary{background:#ece6d7;color:#686049}.save-bar{background:linear-gradient(#f7f2e900,var(--bg) 18%)}.draft-hint{color:#888574}.filter{background:#fffdf7;border-color:#e5ddcd}.filter[aria-pressed="true"]{background:var(--green)}.search-wrap input{background:#fffefa}.record-item{background:#fffefa;border-color:#e6dfd2;position:relative;overflow:hidden}.record-item::before{content:'';position:absolute;top:17px;bottom:17px;left:0;width:3px;border-radius:0 3px 3px 0;background:#62947a}.record-item.bad::before{background:#ce8b70}.record-item.neutral::before{background:#c3a565}.record-item.neutral .rating-badge{background:#fbf0d6;color:#86682d}.record-item.bad .rating-badge{background:#f9e8df;color:#99563f}.tag{background:#f2efe5;color:#75725d}.item-note{border-color:#eee8dc}.summary-item{border:1px solid #e3d9c8;background:#f0e8d9}.summary-item:first-child{background:linear-gradient(145deg,#316d59,#204e40);border-color:#396b56}.summary-item:first-child strong{color:#fff5db}.summary-item:first-child span{color:#d3deca}.summary-item:nth-child(2){background:#f5e4cf}.summary-item:nth-child(3){background:#e8eedf}.summary-item strong{font-family:Georgia,serif;font-weight:500;font-size:29px}.stat-track{background:#f1eee4}.stat-bar{background:#c3b184}.stat-row:first-child .stat-bar{background:linear-gradient(90deg,#a2b496,#356b53)}.stat-rank{color:#a48b59}.empty{background:#fffdf6;border-color:#e1d8c6}.sync-line{border-color:#e1d8c9}.app-footer{color:#9b907b}.app-footer::before{content:'✦';display:block;margin-bottom:8px;color:#ba9a60;font-size:15px}.calendar-card{padding:18px 14px 15px}.calendar-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 2px 15px}.calendar-month-title{margin:0;font-size:20px;letter-spacing:.4px;line-height:1.4}.calendar-month-sub{display:block;font-family:Georgia,serif;font-size:10px;letter-spacing:2.5px;color:#9b8155;margin-top:3px}.calendar-arrows{display:flex;gap:5px}.calendar-nav{border:1px solid #e6ddcd;background:#f9f5ec;min-height:42px;min-width:38px;border-radius:11px;font-size:20px;display:grid;place-items:center;padding:5px 9px}.calendar-nav.today-button{font-size:11px;padding:5px 11px;color:#5f6d58}.calendar-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:linear-gradient(120deg,#edf1e6,#f5ecd9);border:1px solid #e6e0cf;border-radius:13px;padding:12px 0;margin-bottom:20px}.calendar-overview-item{text-align:center;border-right:1px solid #dddac8}.calendar-overview-item:last-child{border:0}.calendar-overview strong{display:block;font-size:23px;line-height:1.2;font-family:Georgia,serif;font-weight:500;color:#365c46;font-variant-numeric:tabular-nums}.calendar-overview small{font-size:11px;color:#698065}.calendar-overview span{display:block;font-size:10px;color:#817e68;margin-top:4px}.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.calendar-weekdays{margin:0 0 8px;text-align:center;font-size:10px;color:#8b8f7f}.calendar-weekdays span:first-child,.calendar-weekdays span:last-child{color:#b28864}.calendar-day{position:relative;min-width:0;height:53px;padding:4px 1px;border:1px solid transparent;background:transparent;border-radius:11px;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:2px;font-size:13px;font-variant-numeric:tabular-nums;color:#59634f}.calendar-day.outside{color:#bdb8a9}.calendar-day.has-records{background:#f4ebd9;border-color:#eee1c5;color:#826333}.calendar-day.is-today{border-color:#71977b}.calendar-day.is-today .day-number::after{content:'';display:inline-block;width:3px;height:3px;border-radius:50%;margin-left:2px;vertical-align:middle;background:currentColor}.calendar-day[aria-pressed="true"]{background:linear-gradient(145deg,#31725b,#1e5040);color:#fff9e7;border-color:#205d49;box-shadow:0 3px 7px #205b4d20}.day-count{font-size:8px;line-height:1.1;letter-spacing:.2px;min-height:9px}.day-dots{display:flex;gap:2px;height:4px}.rating-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#638967}.rating-dot.neutral{background:#c09b4b}.rating-dot.bad{background:#c68168}.calendar-day[aria-pressed="true"] .rating-dot.good{background:#c8ddb0}.calendar-day[aria-pressed="true"] .rating-dot.neutral{background:#efd18e}.calendar-day[aria-pressed="true"] .rating-dot.bad{background:#e9aa8c}.calendar-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:13px;font-size:10px;color:#8a826e;margin:16px 0 0;padding-top:13px;border-top:1px solid #efe8db}.calendar-legend span{display:inline-flex;align-items:center;gap:5px}.calendar-legend .rating-dot{width:6px;height:6px}.day-detail{margin-top:24px}.day-detail-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:13px}.day-detail-title{font-size:17px;margin:0;letter-spacing:.3px}.day-detail-meta{font-size:11px;color:#8b826c;margin:2px 0 0}.calendar-add{border:1px solid #d8c9a9;background:#f2e9d4;color:#7d673e;font-size:11px;padding:8px 10px;min-height:42px;border-radius:11px;white-space:nowrap}.calendar-helper{margin:12px 0 0;color:#908875;font-size:10px;text-align:center;letter-spacing:.2px}main{animation:reveal .35s ease-out}@keyframes reveal{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:350px){.tab-btn{font-size:12px;gap:4px}.tab-btn .icon{width:15px;height:15px}.calendar-card{padding:15px 10px}.calendar-grid,.calendar-weekdays{gap:2px}.calendar-nav{min-width:34px;padding:5px 7px}.calendar-nav.today-button{padding:5px 9px}.calendar-month-title{font-size:18px}.journal-hero{padding:21px 16px;min-height:204px}.journal-hero h2{font-size:22px;max-width:78%}.hero-art{width:124px;right:-8px}.journal-hero #formDescription{max-width:66%;font-size:11px}.hero-caption{font-size:9px}.brand-seal{width:30px;height:30px;font-size:16px}h1{font-size:19px}}
+@media(prefers-reduced-motion:reduce){main{animation:none}}
+
+</style>
 </head>
 <body>
-
-<div class="container">
-    <h2>🥤 飲料開發筆記</h2>
-    
-    <!-- 新增：頁籤導覽列 -->
-    <div class="tab-nav">
-        <div class="tab-btn active" onclick="switchTab('form')">📝 紀錄</div>
-        <div class="tab-btn" onclick="switchTab('list')">📜 反查</div>
-        <div class="tab-btn" onclick="switchTab('stats')">📊 統計</div>
-    </div>
-
-    <!-- 頁籤一：新增/編輯表單 -->
-    <div id="tab-form" class="tab-content active">
-        <div class="form-group">
-            <label>購買日期</label>
-            <input type="date" id="drinkDate">
+<div class="app">
+  <header class="app-header">
+    <div class="logo" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M7 7h10l-1.5 14h-7zM6 7h12M13 7l2-5h3M9 11h6"/><path d="M10 17h.01M14 18h.01M12 15h.01"/></svg></div>
+    <div class="header-copy"><h1>飲料開發筆記</h1><p class="subtitle">SIP SLOWLY · 每一杯，都記得。</p></div><span class="brand-seal" aria-hidden="true">✦</span>
+  </header>
+  <nav class="tabs-wrap" aria-label="主要功能"><div class="tabs" role="tablist" aria-label="飲料筆記">
+    <button type="button" class="tab-btn" id="nav-form" role="tab" aria-selected="true" aria-controls="tab-form" data-tab="form"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 6M4 20l4-1 12-12a2.8 2.8 0 0 0-4-4L4 15zM4 20h16"/></svg>紀錄</button>
+    <button type="button" class="tab-btn" id="nav-list" role="tab" aria-selected="false" aria-controls="tab-list" tabindex="-1" data-tab="list"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M16 16l5 5"/></svg>反查</button>
+    <button type="button" class="tab-btn" id="nav-calendar" role="tab" aria-selected="false" aria-controls="tab-calendar" tabindex="-1" data-tab="calendar"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4M17 3v4M3 11h18M8 15h.01M12 15h.01M16 15h.01M8 18h.01M12 18h.01"/></svg>日曆</button>
+    <button type="button" class="tab-btn" id="nav-stats" role="tab" aria-selected="false" aria-controls="tab-stats" tabindex="-1" data-tab="stats"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h17M7 16v-5M12 16V5M17 16V8"/></svg>統計</button>
+  </div></nav>
+  <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+  <button type="button" id="resumeDraftBtn" class="text-button" hidden style="margin:-8px 0 12px">變更一直未確認？恢復編輯草稿</button>
+  <main>
+    <section id="tab-form" role="tabpanel" aria-labelledby="nav-form">
+      <div class="intro journal-hero"><p class="eyebrow" id="formEyebrow">THE DAILY SIP</p><h2 id="formTitle">今天喝了什麼？</h2><p id="formDescription">留住喜歡的味道，下次點單不猶豫。</p><div class="hero-caption" id="heroCaption">你的私人飲料手帳</div><svg class="hero-art" viewBox="0 0 150 180" aria-hidden="true"><defs><linearGradient id="tea" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3d7a2"/><stop offset="1" stop-color="#c79b63"/></linearGradient><linearGradient id="lid" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff7d9"/><stop offset="1" stop-color="#dec39a"/></linearGradient></defs><circle cx="92" cy="110" r="54" fill="#a7b384" opacity=".17"/><circle cx="127" cy="51" r="4" fill="#e6c182" opacity=".8"/><path d="M32 92l4-6 4 6-4 6zM119 144l3-5 3 5-3 5z" fill="#e2c084"/><g transform="rotate(12 86 100)"><path d="M87 57l8-45h10L94 59" fill="#e8bb79"/><path d="M96 14l7 0" stroke="#fce2ac" stroke-width="2"/><path d="M53 61h64l-8 94q-24 13-48 0z" fill="url(#tea)"/><path d="M60 82h51l-5 68q-20 10-40 0z" fill="#b7874d" opacity=".28"/><path d="M63 86l5 46" stroke="#fff5d0" stroke-width="4" stroke-linecap="round" opacity=".48"/><path d="M65 140q19-12 41 0l-1 12q-19 10-39 0z" fill="#734d36" opacity=".15"/><g fill="#4d3d2d"><circle cx="73" cy="141" r="4"/><circle cx="86" cy="146" r="4.5"/><circle cx="98" cy="141" r="4"/><circle cx="77" cy="152" r="3.8"/><circle cx="98" cy="153" r="3.8"/><circle cx="89" cy="134" r="3.5"/></g><rect x="48" y="53" width="74" height="12" rx="5" fill="url(#lid)"/><ellipse cx="85" cy="54" rx="35" ry="3" fill="#fff0cd"/><rect x="75" y="91" width="28" height="31" rx="14" fill="#f5dfb5" opacity=".9"/><path d="M82 107q7-14 14 0-7 14-14 0z" fill="#42634a"/><path d="M86 110l6-8" stroke="#efd5a8" stroke-width="1.2"/></g><path d="M27 53h10M32 48v10" stroke="#e3bc7c" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <form id="drinkForm">
+        <div class="card">
+          <h3 class="card-heading"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18L19 4H5zM5 10v10h14V10M9 20v-6h6v6M3 10a3 3 0 0 0 5 2 3 3 0 0 0 4 0 3 3 0 0 0 4 0 3 3 0 0 0 5-2"/></svg>這一杯的基本資料<span class="step" aria-hidden="true">01</span></h3>
+          <div class="field"><label for="drinkDate">購買日期<span class="required" aria-hidden="true">*</span></label><input type="date" id="drinkDate" required></div>
+          <div class="field"><label for="shopName">飲料店<span class="required" aria-hidden="true">*</span></label><input type="text" id="shopName" required maxlength="200" placeholder="例如：五十嵐、麻古" list="shopSuggestions" autocomplete="off"><datalist id="shopSuggestions"></datalist></div>
+          <div class="field"><label for="location">地點<span class="optional">選填</span></label><input type="text" id="location" maxlength="200" placeholder="例如：三重自強店" autocomplete="off"></div>
+          <div class="field"><label for="drinkName">飲料品項<span class="required" aria-hidden="true">*</span></label><input type="text" id="drinkName" required maxlength="200" placeholder="例如：金萱雙 Q" list="drinkSuggestions" autocomplete="off"><datalist id="drinkSuggestions"></datalist></div>
         </div>
-        <div class="form-group"><label>飲料店</label><input type="text" id="shopName" placeholder="例如：五十嵐、麻古"></div>
-        <div class="form-group"><label>地點</label><input type="text" id="location" placeholder="例如：三重自強店"></div>
-        <div class="form-group"><label>品項</label><input type="text" id="drinkName" placeholder="例如：金萱雙Q"></div>
-        
-        <div class="row">
-            <div class="form-group" style="flex:1.2">
-                <label>甜度</label>
-                <select id="sugar">
-                    <option value="無糖">無糖</option>
-                    <option value="一分糖" selected>一分糖</option>
-                    <option value="微糖(3分)">微糖(3分)</option>
-                    <option value="半糖(5分)">半糖(5分)</option>
-                    <option value="少糖(7分)">少糖(7分)</option>
-                    <option value="正常糖">正常糖</option>
-                </select>
-            </div>
-            <div class="form-group" style="flex:1">
-                <label>冰塊</label>
-                <select id="ice">
-                    <option value="微冰" selected>微冰</option>
-                    <option value="少冰">少冰</option>
-                    <option value="去冰">去冰</option>
-                    <option value="正常">正常</option>
-                    <option value="熱">熱</option>
-                </select>
-            </div>
+        <div class="card">
+          <h3 class="card-heading"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="8" cy="7" r="3" fill="white"/><circle cx="16" cy="17" r="3" fill="white"/></svg>我的專屬口味<span class="step" aria-hidden="true">02</span></h3>
+          <div class="row"><div class="field"><label for="sugar">甜度</label><select id="sugar"><option>無糖</option><option selected>一分糖</option><option>微糖(3分)</option><option>半糖(5分)</option><option>少糖(7分)</option><option>正常糖</option></select></div><div class="field"><label for="ice">冰塊</label><select id="ice"><option selected>微冰</option><option>少冰</option><option>去冰</option><option>正常</option><option>熱</option></select></div></div>
+          <fieldset class="rating-field"><legend class="field-label">這杯的評價</legend><div class="rating-options">
+            <label class="rating-option"><input type="radio" name="rating" value="👍 好喝" checked><span class="rating-face"><span class="emoji" aria-hidden="true">👍</span>好喝，再點！</span></label>
+            <label class="rating-option"><input type="radio" name="rating" value="👌 還好"><span class="rating-face"><span class="emoji" aria-hidden="true">👌</span>還好，普通</span></label>
+            <label class="rating-option"><input type="radio" name="rating" value="👎 踩雷"><span class="rating-face"><span class="emoji" aria-hidden="true">👎</span>踩雷，避開</span></label>
+          </div></fieldset>
+          <div class="field"><label for="note">備註心得<span class="optional">選填</span></label><textarea id="note" rows="3" maxlength="5000" placeholder="茶香、奶味、珍珠 Q 度……寫給下次的自己。"></textarea></div>
         </div>
-
-        <div class="form-group">
-            <label>評價</label>
-            <select id="rating">
-                <option value="👍 好喝">👍 好喝，下次再點</option>
-                <option value="👌 還好">👌 還好，中規中矩</option>
-                <option value="👎 踩雷">👎 難喝，千萬別點</option>
-            </select>
-        </div>
-
-        <div class="form-group"><label>備註心得</label><textarea id="note" rows="2" placeholder="口感分享、珍珠Q度..."></textarea></div>
-
-        <div style="display: flex; gap: 10px;">
-            <button id="saveBtn" onclick="saveRecord()" style="flex: 2;">💾 儲存並上傳雲端</button>
-            <button id="cancelBtn" onclick="cancelEdit()" style="flex: 1; display: none; background-color: #95a5a6;">取消</button>
-        </div>
-    </div>
-    
-    <!-- 頁籤二：反查清單 -->
-    <div id="tab-list" class="tab-content">
-        <div class="search-section" style="margin-top: 0; border-top: none; padding-top: 0;">
-            <label>🔍 快速反查歷史 (輸入關鍵字)</label>
-            <input type="text" id="searchInput" class="search-box" placeholder="搜尋店名、品項..." onkeyup="displayRecords()">
-            
-            <div id="loadingStatus" class="loading-text">🔄 正在與雲端同步資料中...</div>
-            <div id="recordList" class="record-list"></div>
-        </div>
-    </div>
-
-    <!-- 頁籤三：統計數據 -->
-    <div id="tab-stats" class="tab-content">
-        <div id="statsContainer">
-            <div style="text-align:center; color:#999; margin-top:20px;">資料載入中...</div>
-        </div>
-    </div>
+        <p class="draft-hint" id="draftHint">＊為必填欄位 · 未送出的內容會暫存在這台裝置</p>
+        <div class="save-bar"><button id="cancelBtn" class="secondary" type="button" hidden>取消編輯</button><button id="saveBtn" class="primary" type="submit"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 15v5h16v-5"/></svg><span id="saveLabel">儲存這杯，送到雲端</span></button></div>
+      </form>
+    </section>
+    <section id="tab-list" role="tabpanel" aria-labelledby="nav-list" hidden>
+      <div class="intro"><p class="eyebrow">FIND YOUR FAVORITES</p><h2>下一杯，喝哪杯？</h2><p>翻翻自己的筆記，好喝的值得再來一次。</p></div>
+      <label for="searchInput" class="sr-only">搜尋店名、品項、地點或備註</label><div class="search-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M16 16l5 5"/></svg><input type="search" id="searchInput" placeholder="搜尋店名、品項、地點或備註" autocomplete="off"><button type="button" id="clearSearch" class="clear-search" aria-label="清除搜尋" hidden>×</button></div>
+      <div class="filter-row" role="group" aria-label="依評價篩選"><button type="button" class="filter" data-filter="all" aria-pressed="true">全部</button><button type="button" class="filter" data-filter="good" aria-pressed="false">👍 好喝</button><button type="button" class="filter" data-filter="neutral" aria-pressed="false">👌 還好</button><button type="button" class="filter" data-filter="bad" aria-pressed="false">👎 踩雷</button></div>
+      <div class="list-meta"><span id="resultCount" role="status" aria-live="polite">等待載入紀錄</span><label for="sortOrder" class="sr-only">紀錄排序</label><select id="sortOrder"><option value="newest">日期由新到舊</option><option value="oldest">日期由舊到新</option></select></div>
+      <div id="recordList" aria-busy="true"></div>
+    </section>
+    <section id="tab-calendar" role="tabpanel" aria-labelledby="nav-calendar" hidden>
+      <div class="intro"><p class="eyebrow">A MONTH IN SIPS</p><h2>把日子，喝成回憶。</h2><p>哪天喝了哪一杯，翻翻日曆就想起來。</p></div>
+      <div class="card calendar-card">
+        <div class="calendar-toolbar"><div><h3 id="calendarMonthLabel" class="calendar-month-title" aria-live="polite"></h3><span id="calendarMonthSub" class="calendar-month-sub" aria-hidden="true"></span></div><div class="calendar-arrows"><button type="button" id="calendarPrev" class="calendar-nav" aria-label="上一個月">‹</button><button type="button" id="calendarToday" class="calendar-nav today-button">今天</button><button type="button" id="calendarNext" class="calendar-nav" aria-label="下一個月">›</button></div></div>
+        <div id="calendarOverview" class="calendar-overview" aria-label="顯示月份的飲料摘要"></div>
+        <div class="calendar-weekdays" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+        <div id="calendarGrid" class="calendar-grid" role="group" aria-label="選擇日期" aria-describedby="calendarHelp"></div>
+        <div class="calendar-legend" aria-label="評價色點圖例"><span><i class="rating-dot good" aria-hidden="true"></i>好喝</span><span><i class="rating-dot neutral" aria-hidden="true"></i>還好</span><span><i class="rating-dot bad" aria-hidden="true"></i>踩雷</span></div>
+        <p class="calendar-helper" id="calendarHelp">點選日期，查看當天紀錄 · 色點代表評價</p>
+      </div>
+      <div class="day-detail"><div class="day-detail-top"><div><h3 id="calendarDayLabel" class="day-detail-title"></h3><p id="calendarDayMeta" class="day-detail-meta" role="status" aria-live="polite"></p></div><button type="button" id="calendarAdd" class="calendar-add">＋ 記下這天的一杯</button></div><div id="calendarRecords"></div></div>
+    </section>
+    <section id="tab-stats" role="tabpanel" aria-labelledby="nav-stats" hidden>
+      <div class="intro"><p class="eyebrow">YOUR DRINK STORY</p><h2>原來我這麼愛喝。</h2><p>從每一杯紀錄，看看自己的口味偏好。</p></div>
+      <div id="statsContainer"></div>
+    </section>
+  </main>
+  <div class="sync-line"><span id="syncStatus" role="status" aria-live="polite"><span class="connection-dot" aria-hidden="true"></span>正在連接雲端…</span><button type="button" id="refreshBtn" class="text-button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg><span>重新同步</span></button></div>
+  <footer class="app-footer">一杯日常，一點喜歡。<br><a href="./index.html" download="index.html">下載 HTML</a></footer>
 </div>
-
+<dialog id="deleteDialog" class="dialog" aria-labelledby="deleteTitle" aria-describedby="deleteDescription"><h2 id="deleteTitle">刪除這杯紀錄？</h2><p id="deleteDescription"></p><p>這筆資料將從 Google Sheets 永久刪除。</p><div class="dialog-actions"><button type="button" id="dismissDelete" class="secondary">保留紀錄</button><button type="button" id="confirmDelete" class="primary danger">確定刪除</button></div></dialog>
 <script>
-    // --- 重要：貼上你的 Google Apps Script URL ---
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWzUhwBnoYacz-Ncj0npr1ZpKPc7eXqiL6DLJcGsl93URkQkBnL5uSirAGydxcHPVMYw/exec"; 
-    
-    let currentEditId = null;
-    let cloudRecords = []; // 取代原本的 localStorage，現在所有資料存在這個記憶體變數中
+'use strict';
+// 沿用原始 Google Apps Script 端點與 add / update / delete 格式，無須修改試算表。
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwWzUhwBnoYacz-Ncj0npr1ZpKPc7eXqiL6DLJcGsl93URkQkBnL5uSirAGydxcHPVMYw/exec';
+const $ = id => document.getElementById(id);
+const fields = {date:'drinkDate',shop:'shopName',loc:'location',drink:'drinkName',sugar:'sugar',ice:'ice',note:'note'};
+const DRAFT_KEY = 'drink-diary-draft-v1', PENDING_KEY = 'drink-diary-pending-v1';
+let cloudRecords = [], currentEditId = null, activeFilter = 'all';
+let selectedCalendarDate = today(), calendarYear = new Date().getFullYear(), calendarMonth = new Date().getMonth();
+let busy = false, refreshing = false, loaded = false, loadFailed = false, deleteId = null;
+let pending = readStorage(PENDING_KEY);
+if (!pending || !pending.payload || !['add','update','delete'].includes(pending.payload.action) || pending.payload.id == null) pending = null;
+function readStorage(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
+function writeStorage(key,value) { try { value === null ? localStorage.removeItem(key) : localStorage.setItem(key,JSON.stringify(value)); return true; } catch { return false; } }
+function today() { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function dateValue(value) { const match=String(value || '').match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/); return match ? `${match[1]}-${match[2].padStart(2,'0')}-${match[3].padStart(2,'0')}` : ''; }
+function sameId(a,b) { return String(a) === String(b); }
+function esc(value) { return String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function ratingClass(value) { return String(value).includes('👎') ? 'bad' : String(value).includes('👌') ? 'neutral' : 'good'; }
+function getForm() { const r={}; Object.entries(fields).forEach(([key,id])=>r[key]=$(id).value.trim()); r.rating=document.querySelector('input[name="rating"]:checked').value; return r; }
+function fillForm(r) { Object.entries(fields).forEach(([key,id])=>{ if(r[key] != null) $(id).value=key==='date' ? dateValue(r[key]) : r[key]; }); const radio=Array.from(document.querySelectorAll('input[name="rating"]')).find(n=>n.value===r.rating); if(radio) radio.checked=true; }
+function saveDraft() { const saved=writeStorage(DRAFT_KEY,{record:getForm(),editId:currentEditId}); $('draftHint').textContent=saved ? '草稿已暫存於這台裝置 · 尚未送出雲端' : '此瀏覽器無法暫存草稿，離開前請確認已儲存'; }
+function showNotice(message,success=false) { delete $('notice').dataset.source; $('notice').textContent=message; $('notice').classList.toggle('success',success); $('notice').hidden=false; }
+function status(message,state='') { $('syncStatus').replaceChildren(); const dot=document.createElement('span'); dot.className=`connection-dot ${state}`; dot.setAttribute('aria-hidden','true'); $('syncStatus').append(dot,document.createTextNode(message)); }
+function updateControls() {
+  const locked=busy || !!pending;
+  $('drinkForm').querySelectorAll('input,select,textarea').forEach(n=>n.disabled=locked);
+  $('resumeDraftBtn').hidden=!pending; $('resumeDraftBtn').disabled=busy || refreshing;
+  $('saveBtn').disabled=busy || refreshing; $('cancelBtn').disabled=locked; $('refreshBtn').disabled=busy || refreshing;
+  $('saveLabel').textContent=busy ? '正在確認雲端資料…' : pending ? '重新確認雲端狀態' : currentEditId != null ? '儲存修改到雲端' : '儲存這杯，送到雲端';
+  document.querySelectorAll('.action-btn').forEach(n=>n.disabled=locked || refreshing);
+  $('calendarAdd').disabled=locked || refreshing;
+  $('refreshBtn').querySelector('svg').classList.toggle('spinning',refreshing || busy);
+}
+function formMode() { const editing=currentEditId != null; $('formEyebrow').textContent=editing ? 'EDIT YOUR NOTE' : 'THE DAILY SIP'; $('formTitle').textContent=editing ? '調整這杯的筆記' : '今天喝了什麼？'; $('formDescription').textContent=editing ? '更新口味與心得，保留最準確的印象。' : '留住喜歡的味道，下次點單不猶豫。'; $('cancelBtn').hidden=!editing; updateControls(); }
+function clearFormAfterSave() { currentEditId=null; $('drinkName').value=''; $('note').value=''; $('drinkDate').value=today(); document.querySelector('input[name="rating"][value="👍 好喝"]').checked=true; writeStorage(DRAFT_KEY,null); $('draftHint').textContent='已儲存 · 店名、地點與甜度冰塊保留，方便記下一杯'; formMode(); }
+function switchTab(name,focus=false) { for(const tab of document.querySelectorAll('[data-tab]')) { const active=tab.dataset.tab===name; tab.setAttribute('aria-selected',String(active)); tab.tabIndex=active ? 0 : -1; $(`tab-${tab.dataset.tab}`).hidden=!active; if(active && focus) tab.focus(); } if(name==='stats') renderStats(); if(name==='calendar') renderCalendar(); }
+function emptyMarkup(title,detail,action=false) { return `<div class="empty"><span class="empty-icon" aria-hidden="true">🥤</span><h3>${esc(title)}</h3><p>${esc(detail)}</p>${action ? '<button type="button" class="secondary" data-start-note>記下第一杯</button>' : ''}</div>`; }
+function recordMarkup(r) { return `<article class="record-item ${ratingClass(r.rating)}"><div class="record-top"><div class="record-head"><h3 class="item-title">${esc(r.drink)}</h3><div class="item-info">${esc(r.shop)}${r.loc ? ` · ${esc(r.loc)}` : ''}</div></div><span class="rating-badge">${esc(r.rating || '未評價')}</span></div><div class="tags"><span class="tag">${esc(r.sugar || '未填甜度')}</span><span class="tag">${esc(r.ice || '未填冰塊')}</span></div>${r.note ? `<p class="item-note">${esc(r.note)}</p>` : ''}<div class="record-footer"><time class="record-date"${dateValue(r.date) ? ` datetime="${esc(dateValue(r.date))}"` : ''}>${esc(dateValue(r.date) || '日期未填')}</time><button type="button" class="action-btn" data-action="edit" data-id="${esc(r.id)}" aria-label="編輯 ${esc(r.drink)}">編輯</button><button type="button" class="action-btn delete" data-action="delete" data-id="${esc(r.id)}" aria-label="刪除 ${esc(r.drink)}">刪除</button></div></article>`; }
+function displayRecords() {
+  const term=$('searchInput').value.trim().toLocaleLowerCase(); $('clearSearch').hidden=!term;
+  const filtered=cloudRecords.filter(r=>(activeFilter==='all' || ratingClass(r.rating)===activeFilter) && [r.shop,r.drink,r.loc,r.note,r.sugar,r.ice,r.rating].some(v=>String(v || '').toLocaleLowerCase().includes(term)));
+  const direction=$('sortOrder').value==='oldest' ? 1 : -1;
+  filtered.sort((a,b)=>direction*(dateValue(a.date).localeCompare(dateValue(b.date)) || String(a.id).localeCompare(String(b.id),undefined,{numeric:true})));
+  $('resultCount').textContent=loaded ? `${filtered.length} 杯紀錄${filtered.length!==cloudRecords.length ? ` / 共 ${cloudRecords.length} 杯` : ''}` : loadFailed ? '尚未取得雲端資料' : '正在載入紀錄…';
+  if(!filtered.length) { $('recordList').innerHTML=!loaded ? emptyMarkup(loadFailed ? '暫時連不上雲端' : '正在找回你的筆記',loadFailed ? '請檢查網路，再點下方「重新同步」。' : '你的飲料紀錄載入中…') : cloudRecords.length ? emptyMarkup('還沒找到這一杯','試試其他關鍵字，或切回「全部」。') : emptyMarkup('第一杯，從這裡開始','記下今天的味道，下次就有答案。',true); return; }
+  $('recordList').innerHTML=filtered.map(recordMarkup).join(''); updateControls();
+}
 
-    // 網頁載入時自動執行
-    window.onload = function() {
-        setDefaultDate();
-        loadFromCloud(); // 自動從雲端載入最新資料
-    };
+// 日曆採裝置當地日期，避免 UTC 轉換讓購買日期偏移。
+function localDateString(date) { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; }
+function parseLocalDate(value) { const [y,m,d]=value.split('-').map(Number); return new Date(y,m-1,d,12); }
+function setCalendarDate(value,focus=false) {
+  const date=parseLocalDate(value); selectedCalendarDate=localDateString(date); calendarYear=date.getFullYear(); calendarMonth=date.getMonth(); renderCalendar();
+  if(focus) $('calendarGrid').querySelector(`[data-date="${selectedCalendarDate}"]`)?.focus({preventScroll:true});
+}
+function changeCalendarMonth(delta,focus=false) {
+  const next=new Date(calendarYear,calendarMonth+delta,1,12); const day=Math.min(parseLocalDate(selectedCalendarDate).getDate(),new Date(next.getFullYear(),next.getMonth()+1,0).getDate());
+  setCalendarDate(localDateString(new Date(next.getFullYear(),next.getMonth(),day,12)),focus);
+}
+function renderCalendar() {
+  const monthKey=`${calendarYear}-${String(calendarMonth+1).padStart(2,'0')}`;
+  const byDate=new Map(); for(const r of cloudRecords) { const key=dateValue(r.date); if(key) { if(!byDate.has(key)) byDate.set(key,[]); byDate.get(key).push(r); } }
+  const monthRecords=cloudRecords.filter(r=>dateValue(r.date).slice(0,7)===monthKey),days=new Set(monthRecords.map(r=>dateValue(r.date))).size;
+  const good=monthRecords.filter(r=>ratingClass(r.rating)==='good').length;
+  $('calendarMonthLabel').textContent=`${calendarYear} 年 ${calendarMonth+1} 月`;
+  $('calendarMonthSub').textContent=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'][calendarMonth]+' / SIP JOURNAL';
+  $('calendarGrid').setAttribute('aria-label',`${calendarYear} 年 ${calendarMonth+1} 月，選擇日期；可使用方向鍵切換日期`);
+  $('calendarOverview').innerHTML=`<div class="calendar-overview-item"><strong>${loaded ? monthRecords.length : '—'}<small> 杯</small></strong><span>本月紀錄</span></div><div class="calendar-overview-item"><strong>${loaded ? days : '—'}<small> 天</small></strong><span>有喝的日子</span></div><div class="calendar-overview-item"><strong>${loaded && monthRecords.length ? Math.round(good/monthRecords.length*100) : '—'}<small>${loaded && monthRecords.length ? '%' : ''}</small></strong><span>好喝比例</span></div>`;
+  const start=new Date(calendarYear,calendarMonth,1,12); start.setDate(1-start.getDay()); let html='';
+  for(let i=0;i<42;i++) {
+    const date=new Date(start); date.setDate(start.getDate()+i); const key=localDateString(date),items=byDate.get(key)||[],outside=date.getMonth()!==calendarMonth,isToday=key===today(),selected=key===selectedCalendarDate;
+    const types=[...new Set(items.map(r=>ratingClass(r.rating)))]; const ratings=types.map(t=>t==='good'?'好喝':t==='bad'?'踩雷':'還好').join('、');
+    const label=`${date.getFullYear()} 年 ${date.getMonth()+1} 月 ${date.getDate()} 日${isToday?'，今天':''}，${loaded ? (items.length ? `${items.length} 杯飲料，${ratings}` : '沒有飲料紀錄') : '資料尚未載入'}`;
+    html+=`<button type="button" class="calendar-day${outside?' outside':''}${items.length?' has-records':''}${isToday?' is-today':''}" data-date="${key}" aria-pressed="${selected}"${isToday?' aria-current="date"':''} tabindex="${selected?'0':'-1'}" aria-label="${esc(label)}"><span class="day-number">${date.getDate()}</span><span class="day-count">${loaded && items.length ? `${items.length}杯` : ''}</span><span class="day-dots" aria-hidden="true">${types.map(t=>`<i class="rating-dot ${t}"></i>`).join('')}</span></button>`;
+  }
+  $('calendarGrid').innerHTML=html;
+  const selectedDate=parseLocalDate(selectedCalendarDate),items=(byDate.get(selectedCalendarDate)||[]).slice().sort((a,b)=>String(a.id).localeCompare(String(b.id),undefined,{numeric:true}));
+  $('calendarDayLabel').textContent=`${selectedDate.getMonth()+1} 月 ${selectedDate.getDate()} 日・星期${'日一二三四五六'[selectedDate.getDay()]}`;
+  $('calendarDayMeta').textContent=!loaded ? (loadFailed ? '等待重新同步雲端' : '正在載入這天的紀錄…') : `${items.length} 杯紀錄${selectedCalendarDate===today() ? ' · 就是今天' : ''}`;
+  $('calendarRecords').innerHTML=!loaded ? emptyMarkup(loadFailed ? '暫時連不上雲端' : '正在翻開這天的筆記',loadFailed ? '請檢查連線，再點下方「重新同步」。' : '雲端資料載入後，就能看到飲料紀錄。') : items.length ? items.map(recordMarkup).join('') : emptyMarkup('這天，還沒有留下味道','喝過什麼好喝的？點上方按鈕補記這一天。');
+  $('heroCaption').textContent=loaded ? `已收藏 ${cloudRecords.length} 杯日常` : '你的私人飲料手帳';
+  updateControls();
+}
+function startCalendarRecord() {
+  if(busy || pending || refreshing) return;
+  const draft=getForm(); if((currentEditId!=null || draft.drink || draft.note) && !window.confirm('目前有尚未儲存的內容。要以選定日期的新紀錄取代草稿嗎？')) return;
+  clearFormAfterSave(); $('drinkDate').value=selectedCalendarDate; saveDraft(); switchTab('form');
+  window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); ($('shopName').value ? $('drinkName') : $('shopName')).focus({preventScroll:true});
+}
+function initCalendar() {
+  $('calendarPrev').addEventListener('click',()=>changeCalendarMonth(-1)); $('calendarNext').addEventListener('click',()=>changeCalendarMonth(1)); $('calendarToday').addEventListener('click',()=>setCalendarDate(today())); $('calendarAdd').addEventListener('click',startCalendarRecord);
+  $('calendarGrid').addEventListener('click',event=>{const day=event.target.closest('[data-date]');if(day) setCalendarDate(day.dataset.date,true);});
+  $('calendarGrid').addEventListener('keydown',event=>{
+    const button=event.target.closest('[data-date]'); if(!button) return;
+    if(event.key==='PageUp' || event.key==='PageDown') { event.preventDefault(); changeCalendarMonth(event.key==='PageUp'?-1:1,true); return; }
+    const date=parseLocalDate(button.dataset.date); const shifts={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7,Home:-date.getDay(),End:6-date.getDay()};
+    if(!(event.key in shifts)) return; event.preventDefault(); date.setDate(date.getDate()+shifts[event.key]); setCalendarDate(localDateString(date),true);
+  });
+  $('calendarRecords').addEventListener('click',event=>{const button=event.target.closest('[data-action]'); if(button && !button.disabled) button.dataset.action==='edit' ? editRecord(button.dataset.id) : requestDelete(button.dataset.id);});
+}
 
-    // 設定預設日期為今天 (YYYY-MM-DD)
-    function setDefaultDate() {
-        const d = new Date();
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        document.getElementById('drinkDate').value = `${year}-${month}-${day}`;
-    }
-
-    async function saveRecord() {
-        const btn = document.getElementById('saveBtn');
-        const record = {
-            date: document.getElementById('drinkDate').value,
-            shop: document.getElementById('shopName').value,
-            loc: document.getElementById('location').value,
-            drink: document.getElementById('drinkName').value,
-            sugar: document.getElementById('sugar').value,
-            ice: document.getElementById('ice').value,
-            rating: document.getElementById('rating').value,
-            note: document.getElementById('note').value
-        };
-
-        if(!record.shop || !record.drink) return alert('店名與品項是必填的喔！');
-        if(!record.date) return alert('請選擇購買日期！');
-
-        btn.disabled = true;
-
-        if (currentEditId) {
-            // -- 修改模式 --
-            btn.innerText = "☁️ 雲端同步更新中...";
-            record.id = currentEditId;
-            record.action = "update";
-            
-            // 找出舊的日期供 GAS 尋找對應的列
-            let oldRecord = cloudRecords.find(r => r.id === currentEditId);
-            record.originalDate = oldRecord ? oldRecord.date : record.date; 
-
-            if(WEB_APP_URL !== "在此貼上你的GAS網址") {
-                try {
-                    await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(record) });
-                } catch (e) { console.error("雲端更新失敗", e); }
-            }
-            
-            cancelEdit();
-        } else {
-            // -- 新增模式 --
-            btn.innerText = "☁️ 正在上傳至雲端...";
-            record.id = Date.now();
-            record.action = "add";
-
-            if(WEB_APP_URL !== "在此貼上你的GAS網址") {
-                try {
-                    await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(record) });
-                } catch (e) { console.error("雲端上傳失敗", e); }
-            }
-            
-            // 新增成功後清空表單
-            document.getElementById('drinkName').value = '';
-            document.getElementById('note').value = '';
-            document.getElementById('rating').value = '👍 好喝'; 
-            setDefaultDate(); // 重置回今天
-        }
-
-        // 動作完成後，直接重新從雲端拉取最新資料，確保 100% 同步
-        await loadFromCloud();
-        
-        btn.disabled = false;
-        btn.innerText = "💾 儲存並上傳雲端";
-    }
-
-    async function loadFromCloud() {
-        if(WEB_APP_URL === "在此貼上你的GAS網址") return alert("請先在程式碼內設定 GAS 網址！");
-
-        const status = document.getElementById('loadingStatus');
-        const list = document.getElementById('recordList');
-        
-        status.style.display = 'block';
-        list.style.opacity = '0.5'; // 讓舊清單變半透明表示正在更新
-
-        try {
-            // 透過強制無快取確保拿到最新鮮的資料
-            const response = await fetch(WEB_APP_URL, {
-                method: 'GET',
-                redirect: 'follow', 
-                cache: 'no-cache' 
-            });
-            
-            const textData = await response.text(); 
-            
-            try {
-                cloudRecords = JSON.parse(textData); // 將資料存在記憶體變數中
-            } catch (parseError) {
-                console.error("解析失敗：", textData);
-                throw new Error("格式錯誤");
-            }
-
-            if (cloudRecords && Array.isArray(cloudRecords)) {
-                displayRecords(); // 渲染畫面
-                renderStats();    // 新增：渲染統計畫面
-            } 
-        } catch (error) {
-            console.error("載入失敗", error);
-            status.innerText = "❌ 載入失敗，請檢查網路連線";
-            setTimeout(() => { status.style.display = 'none'; }, 3000);
-        } finally {
-            status.style.display = 'none';
-            list.style.opacity = '1';
-            // 恢復預設文字以防下次載入時顯示錯誤訊息
-            setTimeout(() => { status.innerText = "🔄 正在與雲端同步資料中..."; }, 3500);
-        }
-    }
-
-    function displayRecords() {
-        const list = document.getElementById('recordList');
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        
-        // 根據搜尋框過濾記憶體中的雲端資料
-        const filtered = cloudRecords.filter(item => 
-            item.shop.toLowerCase().includes(term) || 
-            item.drink.toLowerCase().includes(term) || 
-            (item.note && item.note.toLowerCase().includes(term))
-        );
-
-        list.innerHTML = '';
-        if (filtered.length === 0) {
-            list.innerHTML = '<div style="text-align:center; color:#999; margin-top:20px;">尚無相符紀錄或雲端為空</div>';
-            return;
-        }
-
-        filtered.forEach(item => {
-            let ratingClass = 'good';
-            if (item.rating.includes('👎')) ratingClass = 'bad';
-            else if (item.rating.includes('👌')) ratingClass = 'neutral';
-
-            const div = document.createElement('div');
-            div.className = `record-item ${ratingClass}`;
-            
-            // 檢查日期的格式，如果包含 T 或是過長的格式，稍微美化它
-            let displayDate = item.date;
-            if(displayDate && displayDate.includes('T')) {
-                displayDate = displayDate.split('T')[0];
-            }
-
-            div.innerHTML = `
-                <div class="action-buttons">
-                    <span class="action-btn edit" onclick="editRecord(${item.id})">編輯</span>
-                    <span class="action-btn delete" onclick="deleteRecord(${item.id})">刪除</span>
-                </div>
-                <div class="item-title">${item.drink}</div>
-                <div class="item-info">📍 ${item.shop} <span style="color:#999">(${item.loc || '未填寫'})</span></div>
-                <div style="margin-top:5px;">
-                    <span class="tag">${item.sugar}</span>
-                    <span class="tag">${item.ice}</span>
-                    <span class="tag">${item.rating}</span>
-                </div>
-                ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
-                <div style="font-size: 12px; color: #aaa; margin-top: 10px; font-weight: bold;">📅 購買日期: ${displayDate}</div>
-            `;
-            list.appendChild(div);
-        });
-    }
-
-    function editRecord(id) {
-        let record = cloudRecords.find(r => r.id === id);
-        if(!record) return;
-
-        // 新增：點擊編輯時，自動切換回表單頁籤
-        switchTab('form');
-
-        // 嘗試解析日期填回 Date Picker
-        let dateVal = record.date;
-        if(dateVal && dateVal.includes('T')) dateVal = dateVal.split('T')[0];
-        // 處理如果在 GAS 端是 YYYY/MM/DD 的舊格式
-        if(dateVal && dateVal.includes('/')) dateVal = dateVal.replace(/\//g, '-');
-
-        document.getElementById('drinkDate').value = dateVal || document.getElementById('drinkDate').value;
-        document.getElementById('shopName').value = record.shop;
-        document.getElementById('location').value = record.loc || '';
-        document.getElementById('drinkName').value = record.drink;
-        document.getElementById('sugar').value = record.sugar;
-        document.getElementById('ice').value = record.ice;
-        document.getElementById('rating').value = record.rating;
-        document.getElementById('note').value = record.note || '';
-
-        currentEditId = id;
-        document.getElementById('saveBtn').innerText = "💾 儲存修改至雲端";
-        document.getElementById('saveBtn').style.backgroundColor = "#3498db";
-        document.getElementById('cancelBtn').style.display = "block";
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function cancelEdit() {
-        currentEditId = null;
-        document.getElementById('drinkName').value = '';
-        document.getElementById('note').value = '';
-        document.getElementById('rating').value = '👍 好喝'; 
-        setDefaultDate();
-        
-        document.getElementById('saveBtn').innerText = "💾 儲存並上傳雲端";
-        document.getElementById('saveBtn').style.backgroundColor = "var(--primary-color)";
-        document.getElementById('cancelBtn').style.display = "none";
-    }
-
-    async function deleteRecord(id) {
-        if(confirm('確定要刪除這筆紀錄嗎？\n(將直接從 Google Sheets 永久刪除)')) {
-            let recordToDelete = cloudRecords.find(r => r.id === id);
-            if(!recordToDelete) return;
-
-            // 讓該卡片在畫面上暫時消失增加流暢感
-            const list = document.getElementById('recordList');
-            list.style.opacity = '0.5';
-
-            if(WEB_APP_URL !== "在此貼上你的GAS網址") {
-                try {
-                    const payload = {
-                        action: 'delete',
-                        id: recordToDelete.id,
-                        originalDate: recordToDelete.date
-                    };
-                    // 送出刪除指令
-                    await fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-                    
-                    // 刪除完成後，重新向雲端要最新資料
-                    await loadFromCloud();
-                } catch (e) {
-                    console.error("雲端刪除失敗", e);
-                    alert("刪除失敗，請檢查網路連線");
-                    list.style.opacity = '1';
-                }
-            }
-        }
-    }
-
-    // --- 以下為新增的頁籤與統計功能函數 ---
-    
-    function switchTab(tabId) {
-        // 移除所有按鈕和內容的 active 狀態
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-        // 啟動點擊的頁籤
-        if(tabId === 'form') document.querySelectorAll('.tab-btn')[0].classList.add('active');
-        if(tabId === 'list') document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        if(tabId === 'stats') document.querySelectorAll('.tab-btn')[2].classList.add('active');
-
-        document.getElementById(`tab-${tabId}`).classList.add('active');
-
-        // 若切換到統計頁，確保重新計算並繪製
-        if(tabId === 'stats') {
-            renderStats();
-        }
-    }
-
-    function renderStats() {
-        const container = document.getElementById('statsContainer');
-        if (!cloudRecords || cloudRecords.length === 0) {
-            container.innerHTML = '<div style="text-align:center; color:#999; margin-top:20px;">尚無紀錄可供統計 🥤</div>';
-            return;
-        }
-
-        let shopCounts = {};
-        let drinkCounts = {};
-        let badDrinks = 0;
-
-        // 計算各店名與品項的次數
-        cloudRecords.forEach(r => {
-            if (r.shop) shopCounts[r.shop] = (shopCounts[r.shop] || 0) + 1;
-            if (r.drink) drinkCounts[r.drink] = (drinkCounts[r.drink] || 0) + 1;
-            if (r.rating && r.rating.includes('👎')) badDrinks++;
-        });
-
-        // 轉換為陣列並由高到低排序
-        let sortedShops = Object.entries(shopCounts).sort((a, b) => b[1] - a[1]);
-        let sortedDrinks = Object.entries(drinkCounts).sort((a, b) => b[1] - a[1]);
-
-        // 組裝統計面板 HTML
-        let html = `
-            <div class="stat-card">
-                <div class="stat-title">🏪 最常光顧的飲料店</div>
-                ${buildStatRows(sortedShops)}
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-title">👑 最受寵幸的品項</div>
-                ${buildStatRows(sortedDrinks)}
-            </div>
-
-            <div style="text-align:center; color:#888; font-size: 13px; margin-top: 15px;">
-                📊 總共紀錄了 <strong>${cloudRecords.length}</strong> 杯飲料<br>
-                💣 成功避雷次數：<strong>${badDrinks}</strong> 次
-            </div>
-        `;
-        container.innerHTML = html;
-    }
-
-    function buildStatRows(sortedArray) {
-        if(sortedArray.length === 0) return '<div style="color:#999; font-size:13px; text-align:center;">無資料</div>';
-        
-        let html = '';
-        // 只取前 5 名，避免手機畫面過長
-        let top5 = sortedArray.slice(0, 5);
-        let maxCount = top5[0][1]; // 取最高次數作為進度條 100% 的基準
-
-        top5.forEach((item, index) => {
-            let percent = (item[1] / maxCount) * 100;
-            // 前三名加上獎牌 icon
-            let icon = '';
-            if(index === 0) icon = '🥇 ';
-            else if(index === 1) icon = '🥈 ';
-            else if(index === 2) icon = '🥉 ';
-
-            html += `
-                <div class="stat-row">
-                    <div class="stat-name" title="${item[0]}">${icon}${item[0]}</div>
-                    <div class="stat-bar-container">
-                        <div class="stat-bar" style="width: ${percent}%;"></div>
-                    </div>
-                    <div class="stat-count">${item[1]} 次</div>
-                </div>
-            `;
-        });
-        return html;
-    }
+function buildStatRows(entries) { const top=entries.sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0],'zh-Hant')).slice(0,5); const max=top[0]?.[1] || 1; return top.map(([name,count],i)=>`<div class="stat-row"><div class="stat-label"><span class="stat-rank">${String(i+1).padStart(2,'0')}</span><span class="stat-name">${esc(name)}</span><span class="stat-count">${count} 杯</span></div><div class="stat-track"><div class="stat-bar" style="width:${count/max*100}%"></div></div></div>`).join(''); }
+function renderStats() {
+  if(!cloudRecords.length) { $('statsContainer').innerHTML=emptyMarkup(!loaded ? (loadFailed ? '暫時無法取得統計' : '正在整理你的口味') : '你的口味故事，待續',!loaded ? '請稍候，或點下方「重新同步」。' : '記錄第一杯飲料後，這裡會出現你的偏好。',loaded); return; }
+  const shops=new Map(),drinks=new Map(); let good=0,bad=0,month=0;
+  for(const r of cloudRecords) { if(r.shop) shops.set(r.shop,(shops.get(r.shop)||0)+1); if(r.drink) drinks.set(r.drink,(drinks.get(r.drink)||0)+1); if(ratingClass(r.rating)==='good') good++; if(ratingClass(r.rating)==='bad') bad++; if(dateValue(r.date).slice(0,7)===today().slice(0,7)) month++; }
+  $('statsContainer').innerHTML=`<div class="summary"><div class="summary-item"><strong>${cloudRecords.length}</strong><span>累積杯數</span></div><div class="summary-item"><strong>${month}</strong><span>本月杯數</span></div><div class="summary-item"><strong>${Math.round(good/cloudRecords.length*100)}<small style="font-size:13px">%</small></strong><span>好喝比例</span></div></div><div class="card"><h3 class="stat-title">最常光顧的飲料店 <small>TOP 5</small></h3>${buildStatRows([...shops])}</div><div class="card"><h3 class="stat-title">最常點的飲料 <small>TOP 5</small></h3>${buildStatRows([...drinks])}</div><p class="stats-foot">已記下 ${bad} 杯踩雷飲料，替下次的自己避雷。</p>`;
+}
+function updateSuggestions() { for(const [id,key] of [['shopSuggestions','shop'],['drinkSuggestions','drink']]) $(id).innerHTML=[...new Set(cloudRecords.map(r=>r[key]).filter(Boolean))].sort().slice(0,100).map(v=>`<option value="${esc(v)}"></option>`).join(''); }
+async function request(options={}) { const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),15000); try { return await fetch(WEB_APP_URL,{...options,signal:controller.signal}); } finally { clearTimeout(timer); } }
+async function readCloud() {
+  const response=await request({method:'GET',redirect:'follow',cache:'no-store'});
+  if(!response.ok) throw new Error('HTTP '+response.status);
+  const data=await response.json();
+  if(!Array.isArray(data) || !data.every(r=>r && typeof r==='object' && r.id!=null)) throw new Error('雲端回傳格式錯誤');
+  // 保留原始 id 與 date，供 GAS 的 originalDate 尋找原有列。
+  cloudRecords=data.map(r=>{const copy={...r}; for(const key of ['shop','loc','drink','sugar','ice','rating','note']) copy[key]=String(r[key] ?? ''); return copy;});
+  loaded=true; loadFailed=false; displayRecords(); renderStats(); renderCalendar(); updateSuggestions();
+  status(`已同步 · ${new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',hour12:false})}`,'online');
+}
+function mutationConfirmed() {
+  if(!pending) return false;
+  const p=pending.payload, r=cloudRecords.find(v=>sameId(v.id,p.id));
+  if(p.action==='delete') return !r;
+  return !!r && dateValue(r.date)===dateValue(p.date) && ['shop','loc','drink','sugar','ice','rating','note'].every(k=>String(r[k] ?? '').trim()===String(p[k] ?? '').trim());
+}
+function completePending() { const action=pending.payload.action; const deletedId=pending.payload.id; pending=null; writeStorage(PENDING_KEY,null); if(action!=='delete') clearFormAfterSave(); else if(currentEditId!=null && sameId(currentEditId,deletedId)) clearFormAfterSave(); showNotice(action==='delete' ? '已確認從雲端刪除這杯紀錄。' : action==='update' ? '筆記已更新，雲端資料已確認。' : '這杯記下了！已確認儲存到雲端。',true); updateControls(); }
+async function loadFromCloud() {
+  if(busy || refreshing) return;
+  refreshing=true; updateControls(); $('recordList').setAttribute('aria-busy','true'); status('正在與雲端同步…');
+  try { await readCloud(); if(pending && mutationConfirmed()) completePending(); else if(pending) showNotice('尚未確認上一筆變更，已保留內容。請稍後點「重新確認雲端狀態」，避免重複送出。'); else if($('notice').dataset.source==='load') { $('notice').hidden=true; delete $('notice').dataset.source; } }
+  catch(error) { loadFailed=true; status(loaded ? '同步失敗 · 顯示上次載入資料' : '連線失敗 · 請重新同步','error'); showNotice(loaded ? '無法更新雲端資料，目前顯示的是上次載入的紀錄。請檢查連線後重試。' : '暫時無法讀取雲端。你的表單內容會保留，請檢查網路或 Google Apps Script 的存取權限後重新同步。'); $('notice').dataset.source='load'; displayRecords(); renderStats(); renderCalendar(); }
+  finally { refreshing=false; $('recordList').setAttribute('aria-busy','false'); updateControls(); }
+}
+async function verifyPending(attempts=1) {
+  if(!pending || busy) return;
+  busy=true; updateControls(); let readSucceeded=false;
+  try {
+    for(let i=0;i<attempts;i++) { if(i) await new Promise(resolve=>setTimeout(resolve,1000*i)); try { await readCloud(); readSucceeded=true; if(mutationConfirmed()) { completePending(); return; } } catch { /* 保留待確認狀態；不再次送出寫入。 */ } }
+    showNotice('上一筆變更尚未獲得雲端確認，內容已保留。請稍後重新確認；確認前不會重複送出，也不能進行其他修改。'); status(readSucceeded ? '變更待確認 · 請稍後重試' : '連線失敗 · 變更待確認','error');
+  } finally { busy=false; updateControls(); }
+}
+async function sendMutation(payload) {
+  if(busy || pending || refreshing) return;
+  pending={payload,draft:{record:getForm(),editId:currentEditId}};
+  const remembered=writeStorage(PENDING_KEY,pending); saveDraft(); busy=true; updateControls();
+  showNotice(remembered ? '正在送出變更並確認雲端資料，請稍候。' : '正在送出變更；此瀏覽器無法暫存狀態，確認完成前請勿關閉頁面。');
+  // GAS no-cors 回應不可讀：POST 完成不等於儲存成功，必須用 GET 比對結果。
+  try { await request({method:'POST',mode:'no-cors',body:JSON.stringify(payload)}); }
+  catch { /* 超時或網路錯誤仍可能已寫入，保留 pending 並以 GET 查核。 */ }
+  finally { busy=false; }
+  await verifyPending(3);
+}
+async function saveRecord(event) {
+  event?.preventDefault(); if(pending) return verifyPending(); if(busy || refreshing) return;
+  if(!$('drinkForm').reportValidity()) return;
+  const record=getForm(); for(const [key,id] of [['shop','shopName'],['drink','drinkName']]) if(!record[key]) { $(id).setCustomValidity('請填寫內容，不能只有空白。'); $(id).reportValidity(); $(id).focus(); return; }
+  if(currentEditId!=null) { if(!loaded) { showNotice('請先重新同步，取得原始紀錄後再儲存修改。'); return; } const old=cloudRecords.find(r=>sameId(r.id,currentEditId)); if(!old) { showNotice('雲端已找不到這筆紀錄，請重新同步後確認。你的草稿仍保留。'); return; } Object.assign(record,{id:old.id,action:'update',originalDate:old.date}); }
+  else Object.assign(record,{id:Date.now(),action:'add'});
+  await sendMutation(record);
+}
+function editRecord(id) {
+  if(busy || pending || refreshing) return; const r=cloudRecords.find(v=>sameId(v.id,id)); if(!r) return;
+  const draft=readStorage(DRAFT_KEY); if(draft && !sameId(draft.editId,id) && (draft.record?.drink || draft.record?.note) && !window.confirm('目前有尚未儲存的草稿。要以這筆紀錄取代草稿嗎？')) return;
+  fillForm(r); currentEditId=r.id; formMode(); saveDraft(); $('notice').hidden=true; switchTab('form'); window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); $('formTitle').setAttribute('tabindex','-1'); $('formTitle').focus({preventScroll:true});
+}
+function requestDelete(id) { if(busy || pending || refreshing) return; const r=cloudRecords.find(v=>sameId(v.id,id)); if(!r) return; deleteId=r.id; $('deleteDescription').textContent=`${r.shop} · ${r.drink}（${dateValue(r.date) || '日期未填'}）`; $('deleteDialog').showModal(); $('dismissDelete').focus(); }
+function init() {
+  $('drinkDate').value=today(); const draft=pending?.draft || readStorage(DRAFT_KEY);
+  if(draft?.record) { fillForm(draft.record); currentEditId=draft.editId ?? null; $('draftHint').textContent='已還原這台裝置上未送出的草稿'; }
+  formMode(); displayRecords(); renderStats(); renderCalendar(); initCalendar();
+  if(pending) showNotice('上一筆變更待確認。正在重新讀取雲端，確認前不會再次送出。');
+  document.querySelectorAll('[data-tab]').forEach(btn=>{ btn.addEventListener('click',()=>switchTab(btn.dataset.tab)); btn.addEventListener('keydown',event=>{ const order=Array.from(document.querySelectorAll('[data-tab]'),n=>n.dataset.tab); let i=order.indexOf(btn.dataset.tab); if(event.key==='ArrowRight') i=(i+1)%order.length; else if(event.key==='ArrowLeft') i=(i+order.length-1)%order.length; else if(event.key==='Home') i=0; else if(event.key==='End') i=order.length-1; else return; event.preventDefault(); switchTab(order[i],true); }); });
+  $('drinkForm').addEventListener('submit',saveRecord);
+  $('drinkForm').addEventListener('input',event=>{event.target.setCustomValidity?.(''); saveDraft();}); $('drinkForm').addEventListener('change',saveDraft);
+  $('cancelBtn').addEventListener('click',()=>{if(!busy && !pending && window.confirm('放棄這次尚未儲存的修改嗎？')) { clearFormAfterSave(); $('draftHint').textContent='已取消編輯 · 可以開始記錄新的一杯'; }});
+  $('searchInput').addEventListener('input',displayRecords); $('sortOrder').addEventListener('change',displayRecords); $('clearSearch').addEventListener('click',()=>{$('searchInput').value=''; displayRecords(); $('searchInput').focus();});
+  document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{activeFilter=btn.dataset.filter; document.querySelectorAll('[data-filter]').forEach(n=>n.setAttribute('aria-pressed',String(n===btn))); displayRecords();}));
+  $('recordList').addEventListener('click',event=>{const btn=event.target.closest('[data-action]'); if(btn && !btn.disabled) btn.dataset.action==='edit' ? editRecord(btn.dataset.id) : requestDelete(btn.dataset.id);});
+  document.addEventListener('click',event=>{if(event.target.closest('[data-start-note]')) {switchTab('form'); $('shopName').focus();}});
+  $('resumeDraftBtn').addEventListener('click',async()=>{
+    if(!pending || busy || refreshing) return;
+    busy=true; updateControls();
+    try {
+      await readCloud();
+      if(mutationConfirmed()) { completePending(); return; }
+      if(!window.confirm('雲端目前尚未顯示這筆變更，但先前的請求仍可能稍後完成。\n\n恢復後不會自動再次送出；請先到反查頁確認，避免重複紀錄。要恢復編輯嗎？')) return;
+      pending=null; writeStorage(PENDING_KEY,null); saveDraft();
+      showNotice('已恢復編輯，草稿仍保留。再次儲存前，請先在反查頁確認先前的變更是否已完成。');
+    } catch { showNotice('目前無法讀取雲端，因此暫不解除等待。請恢復連線後再試，草稿仍保留。'); }
+    finally { busy=false; updateControls(); }
+  });
+  $('refreshBtn').addEventListener('click',()=>pending ? verifyPending() : loadFromCloud());
+  $('dismissDelete').addEventListener('click',()=>{$('deleteDialog').close(); deleteId=null;});
+  $('deleteDialog').addEventListener('close',()=>{deleteId=null;});
+  $('confirmDelete').addEventListener('click',async()=>{const r=cloudRecords.find(v=>sameId(v.id,deleteId)); $('deleteDialog').close(); if(r) await sendMutation({action:'delete',id:r.id,originalDate:r.date});});
+  window.addEventListener('online',()=>{ if(pending) verifyPending(); else loadFromCloud(); });
+  loadFromCloud();
+}
+init();
 </script>
-
 </body>
 </html>
