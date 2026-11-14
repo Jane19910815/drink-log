@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f7f2e9">
 <meta name="description" content="記下每一杯飲料的甜度、冰塊與心得，隨時找回喜歡的味道。">
-<title>飲料開發筆記</title>
+<title>飲料紀錄本</title>
 <style>
 :root{color-scheme:light;--green:#286449;--green-dark:#1d4d37;--green-soft:#edf4ed;--ink:#243c30;--muted:#70796f;--line:#e3e8df;--paper:#fff;--bg:#f7f8f4;--danger:#a54435;--warning:#855d16;--shadow:0 5px 20px #273f3010}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;font-size:15px;line-height:1.55;-webkit-tap-highlight-color:transparent}button,input,select,textarea{font:inherit}button{cursor:pointer}button,input,select,textarea{touch-action:manipulation}button:disabled{cursor:wait;opacity:.6}button:focus-visible,a:focus-visible{outline:3px solid #79a78a;outline-offset:3px}input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px #28644912}input:disabled,select:disabled,textarea:disabled{opacity:.7}button{color:inherit}button svg{flex-shrink:0}.icon{width:20px;height:20px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.app{width:100%;max-width:500px;margin:0 auto;min-height:100dvh;padding:0 20px 24px}.app-header{padding:30px 0 22px;display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;background:var(--green);color:#fff;border-radius:16px;display:grid;place-items:center;transform:rotate(-5deg)}.logo svg{width:29px;height:29px;transform:rotate(5deg)}h1{font-size:22px;letter-spacing:1px;line-height:1.3;margin:0 0 4px;font-weight:750}.subtitle{font-size:12px;color:var(--muted);margin:0;letter-spacing:.6px}.header-copy{flex:1}.connection-dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#9b8871;margin-right:5px}.connection-dot.online{background:#3c8557}.connection-dot.error{background:#c27443}.tabs-wrap{position:sticky;top:0;z-index:5;background:var(--bg);padding:0 0 18px;padding-top:max(0px,env(safe-area-inset-top))}.tabs{display:flex;gap:4px;padding:5px;background:#e9eee5;border-radius:15px}.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;border:0;border-radius:11px;background:transparent;font-size:14px;font-weight:650;color:#667261}.tab-btn[aria-selected="true"]{background:var(--paper);color:var(--green);box-shadow:0 2px 5px #233b3010}.tab-btn .icon{width:18px;height:18px}[hidden]{display:none!important}.intro{margin:0 0 18px}.eyebrow{font-size:11px;letter-spacing:1.5px;color:var(--green);font-weight:750;margin:0 0 6px}.intro h2{font-size:23px;letter-spacing:.4px;line-height:1.4;margin:0 0 4px}.intro p{margin:0;color:var(--muted);font-size:13px}.card{background:var(--paper);border:1px solid var(--line);border-radius:19px;padding:19px;margin-bottom:14px;box-shadow:var(--shadow)}.card-heading{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;margin:0 0 17px}.card-heading .icon{color:var(--green);width:18px;height:18px}.step{margin-left:auto;font-size:10px;letter-spacing:1px;color:#9aab95}.field{margin-bottom:17px}.field:last-child{margin-bottom:0}label,.field-label{display:block;font-size:13px;color:#536150;font-weight:600;margin-bottom:7px}.required{color:var(--green);margin-left:3px}.optional{font-size:11px;color:#83907f;font-weight:400;margin-left:5px}input,select,textarea{width:100%;min-width:0;min-height:48px;background:#fcfdfb;border:1px solid #dfe5da;border-radius:11px;padding:11px 12px;color:var(--ink);font-size:16px;transition:border-color .15s,box-shadow .15s}input::placeholder,textarea::placeholder{color:#9ba494;font-size:14px}input[type="date"]{min-height:48px;-webkit-appearance:none;appearance:none}input::-webkit-date-and-time-value{text-align:left}textarea{resize:vertical;min-height:88px;line-height:1.6}.row{display:flex;gap:12px}.row>.field{flex:1;min-width:0}.rating-field{border:0;padding:0;margin:0 0 17px;min-width:0}.rating-field legend{padding:0;margin-bottom:9px}.rating-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.rating-option{position:relative;display:block;margin:0;cursor:pointer}.rating-option input{position:absolute;opacity:0;width:1px;min-height:0;height:1px}.rating-face{min-height:77px;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#fcfdfb;color:#6c7667;font-size:12px;transition:background .15s,border-color .15s}.rating-face .emoji{font-size:23px;line-height:1.3}.rating-option input:checked+.rating-face{border-color:var(--green);background:var(--green-soft);color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}.rating-option input[value="👎 踩雷"]:checked+.rating-face{border-color:#b35b44;background:#fff3ef;color:var(--danger);box-shadow:inset 0 0 0 1px #b35b44}.rating-option input:focus-visible+.rating-face{outline:3px solid #79a78a;outline-offset:3px}.save-bar{position:sticky;bottom:0;z-index:4;padding:12px 0 max(14px,env(safe-area-inset-bottom));background:linear-gradient(#f7f8f400,var(--bg) 15%);display:flex;gap:10px}.primary,.secondary{border:0;border-radius:13px;min-height:52px;padding:12px 16px;font-size:15px;font-weight:650;display:flex;justify-content:center;align-items:center;gap:8px}.primary{background:var(--green);color:white;box-shadow:0 4px 10px #28644920;flex:1}.primary:hover:enabled{background:var(--green-dark)}.secondary{background:#e7ece3;color:#52634a}.draft-hint{margin:-2px 0 0;text-align:center;font-size:11px;color:#818a7a}.sync-line{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}.text-button{border:0;background:transparent;display:inline-flex;align-items:center;gap:5px;padding:8px;min-height:40px;border-radius:8px;color:var(--green);font-size:12px}.text-button .icon{width:15px;height:15px}.notice{padding:12px 14px;margin-bottom:16px;border:1px solid #e7d5af;background:#fff9ed;color:#75571f;border-radius:12px;font-size:13px;white-space:pre-line}.notice.success{background:var(--green-soft);color:var(--green);border-color:#d0e3d0}.search-wrap{position:relative}.search-wrap>.icon{position:absolute;top:15px;left:14px;color:#829078}.search-wrap input{padding-left:43px;padding-right:44px;background:#fff}.clear-search{position:absolute;right:3px;top:3px;min-height:43px;width:40px;border:0;background:transparent;color:#7e8975;font-size:22px}.filter-row{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#fff;border-radius:20px;padding:8px 13px;min-height:40px;font-size:12px;color:#6c7667}.filter[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:white}.list-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:15px 0 12px;color:var(--muted);font-size:12px}.list-meta select{width:auto;min-height:40px;padding:6px 26px 6px 10px;font-size:12px;background:transparent;border:0}.record-item{padding:17px;background:#fff;border:1px solid var(--line);border-radius:16px;margin:0 0 12px;box-shadow:var(--shadow)}.record-top{display:flex;gap:10px;align-items:flex-start}.record-head{min-width:0;flex:1}.item-title{font-size:17px;font-weight:700;overflow-wrap:anywhere;margin:0 0 3px}.item-info{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.rating-badge{padding:4px 8px;border-radius:7px;background:var(--green-soft);color:var(--green);font-size:11px;white-space:nowrap}.record-item.bad .rating-badge{background:#fff0e9;color:#9a4e35}.record-item.neutral .rating-badge{background:#f1f1e9;color:#767654}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.tag{font-size:11px;color:#65715f;background:#f3f5ef;border-radius:6px;padding:4px 8px}.item-note{font-size:13px;color:#69735f;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;border-top:1px solid #edf0e9;padding-top:12px;margin:12px 0 0}.record-footer{display:flex;align-items:center;gap:3px;margin-top:11px}.record-date{font-size:11px;color:#8b9483;flex:1}.action-btn{border:0;background:transparent;border-radius:8px;min-height:44px;padding:8px 10px;color:var(--green);font-size:12px}.action-btn.delete{color:#a47567}.empty{text-align:center;padding:45px 16px;background:#fff;border:1px dashed #dce3d5;border-radius:16px}.empty-icon{font-size:32px;display:block;margin-bottom:10px}.empty h3{font-size:16px;margin:0 0 6px}.empty p{color:var(--muted);font-size:13px;margin:0}.empty .secondary{margin:18px auto 0;font-size:13px;min-height:44px}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:18px}.summary-item{background:#edf2e9;border-radius:13px;padding:15px 8px;text-align:center}.summary-item strong{display:block;font-size:25px;color:var(--green);font-variant-numeric:tabular-nums;line-height:1.3}.summary-item span{font-size:11px;color:#748069}.stat-title{font-size:15px;margin:0 0 18px;display:flex;justify-content:space-between;align-items:center}.stat-title small{font-size:10px;color:#8a957f;font-weight:400;letter-spacing:1px}.stat-row{margin-bottom:16px}.stat-row:last-child{margin-bottom:0}.stat-label{display:flex;gap:8px;align-items:baseline;font-size:13px;margin-bottom:7px}.stat-rank{color:#91a184;font-size:11px;width:14px}.stat-name{flex:1;min-width:0;overflow-wrap:anywhere}.stat-count{font-size:11px;color:#7b8971;white-space:nowrap}.stat-track{height:6px;background:#eff3e9;border-radius:4px;overflow:hidden;margin-left:22px}.stat-bar{height:100%;background:#8da888;border-radius:4px}.stat-row:first-child .stat-bar{background:var(--green)}.stats-foot{text-align:center;color:#7c8773;font-size:12px;padding:5px 0 15px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.app-footer a{color:var(--green);text-decoration:none;display:inline-block;padding:10px}.app-footer{text-align:center;color:#8b9481;font-size:10px;letter-spacing:1px;margin-top:18px}.dialog{width:calc(100% - 40px);max-width:370px;border:1px solid var(--line);border-radius:19px;padding:24px;color:var(--ink);box-shadow:0 20px 60px #1c332333}.dialog::backdrop{background:#20302366}.dialog h2{font-size:19px;margin:0 0 10px}.dialog p{font-size:14px;color:var(--muted);overflow-wrap:anywhere}.dialog-actions{display:flex;gap:10px;margin-top:22px}.dialog-actions button{flex:1}.danger{background:var(--danger)}.danger:hover:enabled{background:#893729}.spinning{animation:spin 1.2s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(min-width:600px){.app{padding-top:15px;padding-bottom:40px}.app-header{padding-top:26px}}@media(max-width:350px){.app{padding-left:14px;padding-right:14px}.card{padding:16px}.filter{padding:8px 10px}h1{font-size:20px}.rating-options{gap:6px}.row{gap:8px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
@@ -22,7 +22,7 @@ body{background:radial-gradient(ellipse at 0 0,#ecdeca80,transparent 55%),var(--
 <div class="app">
   <header class="app-header">
     <div class="logo" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M7 7h10l-1.5 14h-7zM6 7h12M13 7l2-5h3M9 11h6"/><path d="M10 17h.01M14 18h.01M12 15h.01"/></svg></div>
-    <div class="header-copy"><h1>飲料開發筆記</h1><p class="subtitle">SIP SLOWLY · 每一杯，都記得。</p></div><span class="brand-seal" aria-hidden="true">✦</span>
+    <div class="header-copy"><h1>飲料紀錄本</h1><p class="subtitle">記下每一杯，下次點單更有把握。</p></div><span class="brand-seal" aria-hidden="true">✦</span>
   </header>
   <nav class="tabs-wrap" aria-label="主要功能"><div class="tabs" role="tablist" aria-label="飲料筆記">
     <button type="button" class="tab-btn" id="nav-form" role="tab" aria-selected="true" aria-controls="tab-form" data-tab="form"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l6 6M4 20l4-1 12-12a2.8 2.8 0 0 0-4-4L4 15zM4 20h16"/></svg>紀錄</button>
@@ -31,6 +31,7 @@ body{background:radial-gradient(ellipse at 0 0,#ecdeca80,transparent 55%),var(--
     <button type="button" class="tab-btn" id="nav-stats" role="tab" aria-selected="false" aria-controls="tab-stats" tabindex="-1" data-tab="stats"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h17M7 16v-5M12 16V5M17 16V8"/></svg>統計</button>
   </div></nav>
   <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+  <div id="pendingUpdateActions" hidden style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:-5px 0 12px"><button type="button" id="retryUpdateBtn" class="secondary" style="min-height:42px;font-size:12px">重新送出這次修改</button><a class="text-button" href="./cloud-setup.html">雲端程式更新說明 ↗</a></div>
   <button type="button" id="resumeDraftBtn" class="text-button" hidden style="margin:-8px 0 12px">變更一直未確認？恢復編輯草稿</button>
   <main>
     <section id="tab-form" role="tabpanel" aria-labelledby="nav-form">
@@ -82,7 +83,7 @@ body{background:radial-gradient(ellipse at 0 0,#ecdeca80,transparent 55%),var(--
     </section>
   </main>
   <div class="sync-line"><span id="syncStatus" role="status" aria-live="polite"><span class="connection-dot" aria-hidden="true"></span>正在連接雲端…</span><button type="button" id="refreshBtn" class="text-button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg><span>重新同步</span></button></div>
-  <footer class="app-footer">一杯日常，一點喜歡。<br><a href="./index.html" download="index.html">下載 HTML</a></footer>
+  <footer class="app-footer">把喝過的每一杯，記在這裡。<br><a href="./index.html" download="index.html">下載 HTML</a><a href="./cloud-setup.html">雲端更新說明</a></footer>
 </div>
 <dialog id="deleteDialog" class="dialog" aria-labelledby="deleteTitle" aria-describedby="deleteDescription"><h2 id="deleteTitle">刪除這杯紀錄？</h2><p id="deleteDescription"></p><p>這筆資料將從 Google Sheets 永久刪除。</p><div class="dialog-actions"><button type="button" id="dismissDelete" class="secondary">保留紀錄</button><button type="button" id="confirmDelete" class="primary danger">確定刪除</button></div></dialog>
 <script>
@@ -92,7 +93,7 @@ const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwWzUhwBnoYacz-Ncj0
 const $ = id => document.getElementById(id);
 const fields = {date:'drinkDate',shop:'shopName',loc:'location',drink:'drinkName',sugar:'sugar',ice:'ice',note:'note'};
 const DRAFT_KEY = 'drink-diary-draft-v1', PENDING_KEY = 'drink-diary-pending-v1';
-let cloudRecords = [], currentEditId = null, activeFilter = 'all';
+let cloudRecords = [], currentEditId = null, currentEditOriginal = null, deleteOriginal = null, activeFilter = 'all';
 let selectedCalendarDate = today(), calendarYear = new Date().getFullYear(), calendarMonth = new Date().getMonth();
 let busy = false, refreshing = false, loaded = false, loadFailed = false, deleteId = null;
 let pending = readStorage(PENDING_KEY);
@@ -104,15 +105,68 @@ function dateValue(value) { const match=String(value || '').match(/^(\d{4})[-/](
 function sameId(a,b) { return String(a) === String(b); }
 function esc(value) { return String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function ratingClass(value) { return String(value).includes('👎') ? 'bad' : String(value).includes('👌') ? 'neutral' : 'good'; }
+
+function cleanText(value) { return String(value ?? '').replace(/\r\n/g,'\n').trim(); }
+function recordKey(r) { return encodeURIComponent(JSON.stringify([String(r.id),r.date,r.shop,r.loc,r.drink])); }
+function snapshotRecord(r) { const value={id:r.id,date:r.date}; for(const k of ['shop','loc','drink','sugar','ice','rating','note']) value[k]=r[k] || ''; if(r.backendVersion) value.backendVersion=r.backendVersion; return value; }
+function sameIdentity(a,b) { return !!a && !!b && dateValue(a.date)===dateValue(b.date) && ['shop','loc','drink'].every(k=>cleanText(a[k])===cleanText(b[k])); }
+function matchesContent(a,b) { return ['shop','loc','drink','sugar','ice','rating','note'].every(k=>cleanText(a[k])===cleanText(b[k])); }
+function matchesRecord(a,b) { return dateValue(a.date)===dateValue(b.date) && matchesContent(a,b); }
+function findEditableRecord(id,original=null,key=null) {
+  if(key) return cloudRecords.find(r=>recordKey(r)===key);
+  let candidates=cloudRecords.filter(r=>sameId(r.id,id) && (!original || sameIdentity(r,original)));
+  if(candidates.length===1) return candidates[0];
+  if(original?.backendVersion==='sip-archive-v2') return null;
+  if(original) { candidates=cloudRecords.filter(r=>sameIdentity(r,original)); if(candidates.length===1) return candidates[0]; }
+  return null;
+}
+function backendSupportsDateUpdate() { return cloudRecords.some(r=>r.backendVersion==='sip-archive-v2'); }
+function showPendingNotice(readSucceeded=true) {
+  if(!pending) return;
+  const p=pending.payload;
+  const dateWasIgnored=p.action==='update' && cloudRecords.some(r=>(sameId(r.id,p.id) || String(r.date)===String(p.originalDate)) && matchesContent(r,p) && dateValue(r.date)!==dateValue(p.date));
+  if(pending.serverError) showNotice(`雲端回覆：${pending.serverError}。修改內容仍保留，請依雲端更新說明處理後重送。`);
+  else if(dateWasIgnored) showNotice(backendSupportsDateUpdate() ? '雲端程式已更新，原本的修改內容仍保留。請點「重新送出這次修改」，完成購買日期與其他欄位的儲存。' : '已找到原因：舊版雲端程式只更新口味與心得，沒有更新購買日期。請先依「雲端程式更新說明」更新，再點「重新送出這次修改」。你的草稿仍保留。');
+  else showNotice(p.action==='update' ? '這次修改尚未獲得雲端確認，內容仍保留。可以先重新確認，或在確認連線後點「重新送出這次修改」。' : '上一筆變更尚未獲得雲端確認，內容已保留。請稍後重新確認，避免重複送出。');
+  status(readSucceeded ? (dateWasIgnored ? '購買日期尚未寫入 · 修改已保留' : '變更待確認 · 內容已保留') : '連線失敗 · 變更待確認','error');
+}
+async function postPayload(payload) {
+  // 先嘗試讀取 GAS 回覆；即使跨來源回覆不可讀，仍以 GET 查核結果，不自動重送 POST。
+  const response=await request({method:'POST',mode:'cors',redirect:'follow',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(payload)});
+  if(response.type==='opaque' || typeof response.text!=='function') return;
+  const text=await response.text(); let result;
+  try { result=JSON.parse(text); } catch { if(/找不到|失敗|錯誤/.test(text) && pending) pending.serverError=text.slice(0,200); return; }
+  if(result && pending) { if(result.ok===false) pending.serverError=String(result.message || '雲端拒絕這次變更'); else if(result.id!=null) pending.resultId=result.id; writeStorage(PENDING_KEY,pending); }
+}
+async function retryPendingUpdate() {
+  if(!pending || pending.payload.action!=='update' || busy || refreshing) return;
+  busy=true; updateControls();
+  try {
+    await readCloud(); if(mutationConfirmed()) { completePending(); return; }
+    const p=pending.payload;
+    const dateWasIgnored=cloudRecords.some(r=>(sameId(r.id,p.id) || String(r.date)===String(p.originalDate)) && matchesContent(r,p) && dateValue(r.date)!==dateValue(p.date));
+    if(dateWasIgnored && !backendSupportsDateUpdate()) { showPendingNotice(); return; }
+    let original=findEditableRecord(p.id,p.originalRecord || null);
+    if(!original && !p.originalRecord) { const candidates=cloudRecords.filter(r=>dateValue(r.date)===dateValue(p.originalDate)); if(candidates.length===1) original=candidates[0]; }
+    if(original) { p.id=original.id; p.originalDate=original.date; p.originalRecord=snapshotRecord(original); }
+    pending.baselineMatches=cloudRecords.filter(r=>matchesRecord(r,p)).length; delete pending.serverError;
+    writeStorage(PENDING_KEY,pending); showNotice('正在重新送出這次修改，並確認雲端結果…');
+    try { await postPayload(p); } catch { /* POST 可能已完成，不再自動重送。 */ }
+  } catch { showNotice('目前無法連接雲端，因此沒有重新送出。請恢復連線後再試，修改內容仍保留。'); return; }
+  finally { busy=false; updateControls(); }
+  if(pending) await verifyPending(3);
+}
+
 function getForm() { const r={}; Object.entries(fields).forEach(([key,id])=>r[key]=$(id).value.trim()); r.rating=document.querySelector('input[name="rating"]:checked').value; return r; }
 function fillForm(r) { Object.entries(fields).forEach(([key,id])=>{ if(r[key] != null) $(id).value=key==='date' ? dateValue(r[key]) : r[key]; }); const radio=Array.from(document.querySelectorAll('input[name="rating"]')).find(n=>n.value===r.rating); if(radio) radio.checked=true; }
-function saveDraft() { const saved=writeStorage(DRAFT_KEY,{record:getForm(),editId:currentEditId}); $('draftHint').textContent=saved ? '草稿已暫存於這台裝置 · 尚未送出雲端' : '此瀏覽器無法暫存草稿，離開前請確認已儲存'; }
+function saveDraft() { const saved=writeStorage(DRAFT_KEY,{record:getForm(),editId:currentEditId,originalRecord:currentEditOriginal}); $('draftHint').textContent=saved ? '草稿已暫存於這台裝置 · 尚未送出雲端' : '此瀏覽器無法暫存草稿，離開前請確認已儲存'; }
 function showNotice(message,success=false) { delete $('notice').dataset.source; $('notice').textContent=message; $('notice').classList.toggle('success',success); $('notice').hidden=false; }
 function status(message,state='') { $('syncStatus').replaceChildren(); const dot=document.createElement('span'); dot.className=`connection-dot ${state}`; dot.setAttribute('aria-hidden','true'); $('syncStatus').append(dot,document.createTextNode(message)); }
 function updateControls() {
   const locked=busy || !!pending;
   $('drinkForm').querySelectorAll('input,select,textarea').forEach(n=>n.disabled=locked);
   $('resumeDraftBtn').hidden=!pending; $('resumeDraftBtn').disabled=busy || refreshing;
+  $('pendingUpdateActions').hidden=!pending || pending.payload.action!=='update'; $('retryUpdateBtn').disabled=busy || refreshing;
   $('saveBtn').disabled=busy || refreshing; $('cancelBtn').disabled=locked; $('refreshBtn').disabled=busy || refreshing;
   $('saveLabel').textContent=busy ? '正在確認雲端資料…' : pending ? '重新確認雲端狀態' : currentEditId != null ? '儲存修改到雲端' : '儲存這杯，送到雲端';
   document.querySelectorAll('.action-btn').forEach(n=>n.disabled=locked || refreshing);
@@ -120,10 +174,19 @@ function updateControls() {
   $('refreshBtn').querySelector('svg').classList.toggle('spinning',refreshing || busy);
 }
 function formMode() { const editing=currentEditId != null; $('formEyebrow').textContent=editing ? 'EDIT YOUR NOTE' : 'THE DAILY SIP'; $('formTitle').textContent=editing ? '調整這杯的筆記' : '今天喝了什麼？'; $('formDescription').textContent=editing ? '更新口味與心得，保留最準確的印象。' : '留住喜歡的味道，下次點單不猶豫。'; $('cancelBtn').hidden=!editing; updateControls(); }
-function clearFormAfterSave() { currentEditId=null; $('drinkName').value=''; $('note').value=''; $('drinkDate').value=today(); document.querySelector('input[name="rating"][value="👍 好喝"]').checked=true; writeStorage(DRAFT_KEY,null); $('draftHint').textContent='已儲存 · 店名、地點與甜度冰塊保留，方便記下一杯'; formMode(); }
+function clearFormAfterSave() {
+  currentEditId=null; currentEditOriginal=null;
+  const form=$('drinkForm');
+  form.reset();
+  form.querySelectorAll('input,select,textarea').forEach(field=>field.setCustomValidity(''));
+  $('drinkDate').value=today();
+  writeStorage(DRAFT_KEY,null);
+  $('draftHint').textContent='表單已清空，可以直接記錄下一杯';
+  formMode();
+}
 function switchTab(name,focus=false) { for(const tab of document.querySelectorAll('[data-tab]')) { const active=tab.dataset.tab===name; tab.setAttribute('aria-selected',String(active)); tab.tabIndex=active ? 0 : -1; $(`tab-${tab.dataset.tab}`).hidden=!active; if(active && focus) tab.focus(); } if(name==='stats') renderStats(); if(name==='calendar') renderCalendar(); }
 function emptyMarkup(title,detail,action=false) { return `<div class="empty"><span class="empty-icon" aria-hidden="true">🥤</span><h3>${esc(title)}</h3><p>${esc(detail)}</p>${action ? '<button type="button" class="secondary" data-start-note>記下第一杯</button>' : ''}</div>`; }
-function recordMarkup(r) { return `<article class="record-item ${ratingClass(r.rating)}"><div class="record-top"><div class="record-head"><h3 class="item-title">${esc(r.drink)}</h3><div class="item-info">${esc(r.shop)}${r.loc ? ` · ${esc(r.loc)}` : ''}</div></div><span class="rating-badge">${esc(r.rating || '未評價')}</span></div><div class="tags"><span class="tag">${esc(r.sugar || '未填甜度')}</span><span class="tag">${esc(r.ice || '未填冰塊')}</span></div>${r.note ? `<p class="item-note">${esc(r.note)}</p>` : ''}<div class="record-footer"><time class="record-date"${dateValue(r.date) ? ` datetime="${esc(dateValue(r.date))}"` : ''}>${esc(dateValue(r.date) || '日期未填')}</time><button type="button" class="action-btn" data-action="edit" data-id="${esc(r.id)}" aria-label="編輯 ${esc(r.drink)}">編輯</button><button type="button" class="action-btn delete" data-action="delete" data-id="${esc(r.id)}" aria-label="刪除 ${esc(r.drink)}">刪除</button></div></article>`; }
+function recordMarkup(r) { return `<article class="record-item ${ratingClass(r.rating)}"><div class="record-top"><div class="record-head"><h3 class="item-title">${esc(r.drink)}</h3><div class="item-info">${esc(r.shop)}${r.loc ? ` · ${esc(r.loc)}` : ''}</div></div><span class="rating-badge">${esc(r.rating || '未評價')}</span></div><div class="tags"><span class="tag">${esc(r.sugar || '未填甜度')}</span><span class="tag">${esc(r.ice || '未填冰塊')}</span></div>${r.note ? `<p class="item-note">${esc(r.note)}</p>` : ''}<div class="record-footer"><time class="record-date"${dateValue(r.date) ? ` datetime="${esc(dateValue(r.date))}"` : ''}>${esc(dateValue(r.date) || '日期未填')}</time><button type="button" class="action-btn" data-action="edit" data-id="${esc(r.id)}" data-record-key="${esc(recordKey(r))}" aria-label="編輯 ${esc(r.drink)}">編輯</button><button type="button" class="action-btn delete" data-action="delete" data-id="${esc(r.id)}" data-record-key="${esc(recordKey(r))}" aria-label="刪除 ${esc(r.drink)}">刪除</button></div></article>`; }
 function displayRecords() {
   const term=$('searchInput').value.trim().toLocaleLowerCase(); $('clearSearch').hidden=!term;
   const filtered=cloudRecords.filter(r=>(activeFilter==='all' || ratingClass(r.rating)===activeFilter) && [r.shop,r.drink,r.loc,r.note,r.sugar,r.ice,r.rating].some(v=>String(v || '').toLocaleLowerCase().includes(term)));
@@ -184,7 +247,7 @@ function initCalendar() {
     const date=parseLocalDate(button.dataset.date); const shifts={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7,Home:-date.getDay(),End:6-date.getDay()};
     if(!(event.key in shifts)) return; event.preventDefault(); date.setDate(date.getDate()+shifts[event.key]); setCalendarDate(localDateString(date),true);
   });
-  $('calendarRecords').addEventListener('click',event=>{const button=event.target.closest('[data-action]'); if(button && !button.disabled) button.dataset.action==='edit' ? editRecord(button.dataset.id) : requestDelete(button.dataset.id);});
+  $('calendarRecords').addEventListener('click',event=>{const button=event.target.closest('[data-action]'); if(button && !button.disabled) button.dataset.action==='edit' ? editRecord(button.dataset.id,button.dataset.recordKey) : requestDelete(button.dataset.id,button.dataset.recordKey);});
 }
 
 function buildStatRows(entries) { const top=entries.sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0],'zh-Hant')).slice(0,5); const max=top[0]?.[1] || 1; return top.map(([name,count],i)=>`<div class="stat-row"><div class="stat-label"><span class="stat-rank">${String(i+1).padStart(2,'0')}</span><span class="stat-name">${esc(name)}</span><span class="stat-count">${count} 杯</span></div><div class="stat-track"><div class="stat-bar" style="width:${count/max*100}%"></div></div></div>`).join(''); }
@@ -208,15 +271,26 @@ async function readCloud() {
 }
 function mutationConfirmed() {
   if(!pending) return false;
-  const p=pending.payload, r=cloudRecords.find(v=>sameId(v.id,p.id));
-  if(p.action==='delete') return !r;
-  return !!r && dateValue(r.date)===dateValue(p.date) && ['shop','loc','drink','sugar','ice','rating','note'].every(k=>String(r[k] ?? '').trim()===String(p[k] ?? '').trim());
+  const p=pending.payload, candidates=cloudRecords.filter(r=>sameId(r.id,p.id) || (pending.resultId!=null && sameId(r.id,pending.resultId)));
+  if(p.action==='delete') {
+    if(candidates.some(r=>!p.originalRecord || sameIdentity(r,p.originalRecord))) return false;
+    if(p.originalRecord?.backendVersion==='sip-archive-v2') return true;
+    if(p.originalRecord) return !cloudRecords.some(r=>sameIdentity(r,p.originalRecord));
+    return !cloudRecords.some(r=>String(r.date)===String(p.originalDate));
+  }
+  if(candidates.some(r=>matchesRecord(r,p))) return true;
+  // 舊版 ID 每次讀取都可能變動：用變更前後的筆數與原始快照交叉確認。
+  return p.action==='update' && Number.isInteger(pending.baselineMatches) && !!p.originalRecord && cloudRecords.filter(r=>matchesRecord(r,p)).length>pending.baselineMatches && !cloudRecords.some(r=>matchesRecord(r,p.originalRecord));
 }
-function completePending() { const action=pending.payload.action; const deletedId=pending.payload.id; pending=null; writeStorage(PENDING_KEY,null); if(action!=='delete') clearFormAfterSave(); else if(currentEditId!=null && sameId(currentEditId,deletedId)) clearFormAfterSave(); showNotice(action==='delete' ? '已確認從雲端刪除這杯紀錄。' : action==='update' ? '筆記已更新，雲端資料已確認。' : '這杯記下了！已確認儲存到雲端。',true); updateControls(); }
+function completePending() {
+  const p=pending.payload; pending=null; writeStorage(PENDING_KEY,null);
+  if(p.action!=='delete' || (currentEditId!=null && sameId(currentEditId,p.id) && (!currentEditOriginal || !p.originalRecord || sameIdentity(currentEditOriginal,p.originalRecord)))) clearFormAfterSave();
+  showNotice(p.action==='delete' ? '已確認從雲端刪除這杯紀錄。' : p.action==='update' ? '筆記已更新，購買日期與其他欄位皆已確認。' : '這杯記下了！已確認儲存到雲端。',true); updateControls();
+}
 async function loadFromCloud() {
   if(busy || refreshing) return;
   refreshing=true; updateControls(); $('recordList').setAttribute('aria-busy','true'); status('正在與雲端同步…');
-  try { await readCloud(); if(pending && mutationConfirmed()) completePending(); else if(pending) showNotice('尚未確認上一筆變更，已保留內容。請稍後點「重新確認雲端狀態」，避免重複送出。'); else if($('notice').dataset.source==='load') { $('notice').hidden=true; delete $('notice').dataset.source; } }
+  try { await readCloud(); if(pending && mutationConfirmed()) completePending(); else if(pending) showPendingNotice(); else if($('notice').dataset.source==='load') { $('notice').hidden=true; delete $('notice').dataset.source; } }
   catch(error) { loadFailed=true; status(loaded ? '同步失敗 · 顯示上次載入資料' : '連線失敗 · 請重新同步','error'); showNotice(loaded ? '無法更新雲端資料，目前顯示的是上次載入的紀錄。請檢查連線後重試。' : '暫時無法讀取雲端。你的表單內容會保留，請檢查網路或 Google Apps Script 的存取權限後重新同步。'); $('notice').dataset.source='load'; displayRecords(); renderStats(); renderCalendar(); }
   finally { refreshing=false; $('recordList').setAttribute('aria-busy','false'); updateControls(); }
 }
@@ -225,16 +299,16 @@ async function verifyPending(attempts=1) {
   busy=true; updateControls(); let readSucceeded=false;
   try {
     for(let i=0;i<attempts;i++) { if(i) await new Promise(resolve=>setTimeout(resolve,1000*i)); try { await readCloud(); readSucceeded=true; if(mutationConfirmed()) { completePending(); return; } } catch { /* 保留待確認狀態；不再次送出寫入。 */ } }
-    showNotice('上一筆變更尚未獲得雲端確認，內容已保留。請稍後重新確認；確認前不會重複送出，也不能進行其他修改。'); status(readSucceeded ? '變更待確認 · 請稍後重試' : '連線失敗 · 變更待確認','error');
+    showPendingNotice(readSucceeded);
   } finally { busy=false; updateControls(); }
 }
 async function sendMutation(payload) {
   if(busy || pending || refreshing) return;
-  pending={payload,draft:{record:getForm(),editId:currentEditId}};
+  pending={payload,baselineMatches:cloudRecords.filter(r=>matchesRecord(r,payload)).length,draft:{record:getForm(),editId:currentEditId,originalRecord:currentEditOriginal}};
   const remembered=writeStorage(PENDING_KEY,pending); saveDraft(); busy=true; updateControls();
   showNotice(remembered ? '正在送出變更並確認雲端資料，請稍候。' : '正在送出變更；此瀏覽器無法暫存狀態，確認完成前請勿關閉頁面。');
-  // GAS no-cors 回應不可讀：POST 完成不等於儲存成功，必須用 GET 比對結果。
-  try { await request({method:'POST',mode:'no-cors',body:JSON.stringify(payload)}); }
+  // POST 回覆與 GET 的實際資料都會檢查，避免把『已送出』誤判為『已儲存』。
+  try { await postPayload(payload); }
   catch { /* 超時或網路錯誤仍可能已寫入，保留 pending 並以 GET 查核。 */ }
   finally { busy=false; }
   await verifyPending(3);
@@ -243,19 +317,19 @@ async function saveRecord(event) {
   event?.preventDefault(); if(pending) return verifyPending(); if(busy || refreshing) return;
   if(!$('drinkForm').reportValidity()) return;
   const record=getForm(); for(const [key,id] of [['shop','shopName'],['drink','drinkName']]) if(!record[key]) { $(id).setCustomValidity('請填寫內容，不能只有空白。'); $(id).reportValidity(); $(id).focus(); return; }
-  if(currentEditId!=null) { if(!loaded) { showNotice('請先重新同步，取得原始紀錄後再儲存修改。'); return; } const old=cloudRecords.find(r=>sameId(r.id,currentEditId)); if(!old) { showNotice('雲端已找不到這筆紀錄，請重新同步後確認。你的草稿仍保留。'); return; } Object.assign(record,{id:old.id,action:'update',originalDate:old.date}); }
+  if(currentEditId!=null) { if(!loaded) { showNotice('請先重新同步，取得原始紀錄後再儲存修改。'); return; } const old=findEditableRecord(currentEditId,currentEditOriginal); if(!old) { showNotice('雲端已找不到這筆紀錄，請重新同步後確認。你的草稿仍保留。'); return; } if(matchesRecord(old,record)) { clearFormAfterSave(); showNotice('內容沒有變更，無需重新上傳。',true); return; } if(!old.backendVersion && (dateValue(old.date)!==record.date || cloudRecords.filter(r=>sameId(r.id,old.id) || String(r.date)===String(old.date)).length>1)) { showNotice('這次修改需要先更新雲端程式，才能正確儲存日期並辨識紀錄。請開啟頁面底部的「雲端更新說明」。草稿已保留，更新後可直接再儲存。'); saveDraft(); return; } Object.assign(record,{id:old.id,action:'update',originalDate:old.date,originalRecord:snapshotRecord(old)}); }
   else Object.assign(record,{id:Date.now(),action:'add'});
   await sendMutation(record);
 }
-function editRecord(id) {
-  if(busy || pending || refreshing) return; const r=cloudRecords.find(v=>sameId(v.id,id)); if(!r) return;
-  const draft=readStorage(DRAFT_KEY); if(draft && !sameId(draft.editId,id) && (draft.record?.drink || draft.record?.note) && !window.confirm('目前有尚未儲存的草稿。要以這筆紀錄取代草稿嗎？')) return;
-  fillForm(r); currentEditId=r.id; formMode(); saveDraft(); $('notice').hidden=true; switchTab('form'); window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); $('formTitle').setAttribute('tabindex','-1'); $('formTitle').focus({preventScroll:true});
+function editRecord(id,key=null) {
+  if(busy || pending || refreshing) return; const r=findEditableRecord(id,null,key); if(!r) { showNotice('無法唯一辨識這筆舊紀錄，請重新同步後，從對應卡片選擇編輯。'); return; }
+  const draft=readStorage(DRAFT_KEY); if(draft && (draft.originalRecord ? !sameIdentity(draft.originalRecord,r) : !sameId(draft.editId,id)) && (draft.record?.drink || draft.record?.note) && !window.confirm('目前有尚未儲存的草稿。要以這筆紀錄取代草稿嗎？')) return;
+  fillForm(r); currentEditId=r.id; currentEditOriginal=snapshotRecord(r); formMode(); saveDraft(); $('notice').hidden=true; switchTab('form'); window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); $('formTitle').setAttribute('tabindex','-1'); $('formTitle').focus({preventScroll:true});
 }
-function requestDelete(id) { if(busy || pending || refreshing) return; const r=cloudRecords.find(v=>sameId(v.id,id)); if(!r) return; deleteId=r.id; $('deleteDescription').textContent=`${r.shop} · ${r.drink}（${dateValue(r.date) || '日期未填'}）`; $('deleteDialog').showModal(); $('dismissDelete').focus(); }
+function requestDelete(id,key=null) { if(busy || pending || refreshing) return; const r=findEditableRecord(id,null,key); if(!r) { showNotice('無法唯一辨識這筆舊紀錄，請重新同步後再選取。'); return; } deleteId=r.id; deleteOriginal=snapshotRecord(r); $('deleteDescription').textContent=`${r.shop} · ${r.drink}（${dateValue(r.date) || '日期未填'}）`; $('deleteDialog').showModal(); $('dismissDelete').focus(); }
 function init() {
   $('drinkDate').value=today(); const draft=pending?.draft || readStorage(DRAFT_KEY);
-  if(draft?.record) { fillForm(draft.record); currentEditId=draft.editId ?? null; $('draftHint').textContent='已還原這台裝置上未送出的草稿'; }
+  if(draft?.record) { fillForm(draft.record); currentEditId=draft.editId ?? null; currentEditOriginal=draft.originalRecord || pending?.payload.originalRecord || null; $('draftHint').textContent='已還原這台裝置上未送出的草稿'; }
   formMode(); displayRecords(); renderStats(); renderCalendar(); initCalendar();
   if(pending) showNotice('上一筆變更待確認。正在重新讀取雲端，確認前不會再次送出。');
   document.querySelectorAll('[data-tab]').forEach(btn=>{ btn.addEventListener('click',()=>switchTab(btn.dataset.tab)); btn.addEventListener('keydown',event=>{ const order=Array.from(document.querySelectorAll('[data-tab]'),n=>n.dataset.tab); let i=order.indexOf(btn.dataset.tab); if(event.key==='ArrowRight') i=(i+1)%order.length; else if(event.key==='ArrowLeft') i=(i+order.length-1)%order.length; else if(event.key==='Home') i=0; else if(event.key==='End') i=order.length-1; else return; event.preventDefault(); switchTab(order[i],true); }); });
@@ -264,7 +338,7 @@ function init() {
   $('cancelBtn').addEventListener('click',()=>{if(!busy && !pending && window.confirm('放棄這次尚未儲存的修改嗎？')) { clearFormAfterSave(); $('draftHint').textContent='已取消編輯 · 可以開始記錄新的一杯'; }});
   $('searchInput').addEventListener('input',displayRecords); $('sortOrder').addEventListener('change',displayRecords); $('clearSearch').addEventListener('click',()=>{$('searchInput').value=''; displayRecords(); $('searchInput').focus();});
   document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{activeFilter=btn.dataset.filter; document.querySelectorAll('[data-filter]').forEach(n=>n.setAttribute('aria-pressed',String(n===btn))); displayRecords();}));
-  $('recordList').addEventListener('click',event=>{const btn=event.target.closest('[data-action]'); if(btn && !btn.disabled) btn.dataset.action==='edit' ? editRecord(btn.dataset.id) : requestDelete(btn.dataset.id);});
+  $('recordList').addEventListener('click',event=>{const btn=event.target.closest('[data-action]'); if(btn && !btn.disabled) btn.dataset.action==='edit' ? editRecord(btn.dataset.id,btn.dataset.recordKey) : requestDelete(btn.dataset.id,btn.dataset.recordKey);});
   document.addEventListener('click',event=>{if(event.target.closest('[data-start-note]')) {switchTab('form'); $('shopName').focus();}});
   $('resumeDraftBtn').addEventListener('click',async()=>{
     if(!pending || busy || refreshing) return;
@@ -278,10 +352,11 @@ function init() {
     } catch { showNotice('目前無法讀取雲端，因此暫不解除等待。請恢復連線後再試，草稿仍保留。'); }
     finally { busy=false; updateControls(); }
   });
+  $('retryUpdateBtn').addEventListener('click',retryPendingUpdate);
   $('refreshBtn').addEventListener('click',()=>pending ? verifyPending() : loadFromCloud());
   $('dismissDelete').addEventListener('click',()=>{$('deleteDialog').close(); deleteId=null;});
-  $('deleteDialog').addEventListener('close',()=>{deleteId=null;});
-  $('confirmDelete').addEventListener('click',async()=>{const r=cloudRecords.find(v=>sameId(v.id,deleteId)); $('deleteDialog').close(); if(r) await sendMutation({action:'delete',id:r.id,originalDate:r.date});});
+  $('deleteDialog').addEventListener('close',()=>{deleteId=null; deleteOriginal=null;});
+  $('confirmDelete').addEventListener('click',async()=>{const r=findEditableRecord(deleteId,deleteOriginal); const original=deleteOriginal; $('deleteDialog').close(); if(r && !r.backendVersion && cloudRecords.filter(v=>sameId(v.id,r.id) || String(v.date)===String(r.date)).length>1) { showNotice('這筆紀錄與其他紀錄共用日期或暫時 ID。請先完成「雲端更新說明」中的更新，再刪除，以確保選到正確的紀錄。'); return; } if(r) await sendMutation({action:'delete',id:r.id,originalDate:r.date,originalRecord:original});});
   window.addEventListener('online',()=>{ if(pending) verifyPending(); else loadFromCloud(); });
   loadFromCloud();
 }
